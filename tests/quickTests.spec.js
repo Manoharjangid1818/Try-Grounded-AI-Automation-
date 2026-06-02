@@ -7,7 +7,6 @@ test.use({
 
     storageState:
         'auth/user.json'
-
 });
 
 test.describe(
@@ -23,30 +22,20 @@ test.describe(
             async ({ page }) => {
 
                 // Create page object
-                const quickTestsPage =
-                    new QuickTestsPage(page);
+                const quickTestsPage = new QuickTestsPage(page);
 
                 // Open app
-                await page.goto(
-                    'https://grounded-topaz.vercel.app/dashboard'
-                );
+                await page.goto('https://grounded-topaz.vercel.app/dashboard');
 
                 // Open Quick Tests
-                await quickTestsPage
-                    .openQuickTestsPage();
+                await quickTestsPage.openQuickTestsPage();
 
                 // Run Suite
-                await quickTestsPage
-                    .runQuickTestSuite();
+                await quickTestsPage.runQuickTestSuite();
 
                 // Verify results
-                await quickTestsPage
-                    .verifyQuickTestCompleted();
-
+                await quickTestsPage.verifyQuickTestCompleted();
             }
-
         );
-
     }
-
 );

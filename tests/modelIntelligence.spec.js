@@ -7,7 +7,6 @@ test.use({
 
     storageState:
         'auth/user.json'
-
 });
 
 test.describe(
@@ -22,23 +21,15 @@ test.describe(
 
             async ({ page }) => {
 
-                const modelIntelligencePage =
-                    new ModelIntelligencePage(
-                        page
-                    );
+                const modelIntelligencePage = new ModelIntelligencePage(page);
 
-                await page.goto(
-                    'https://grounded-topaz.vercel.app/dashboard'
-                );
+                await page.goto('https://grounded-topaz.vercel.app/dashboard');
 
-                await modelIntelligencePage
-                    .openModelIntelligence();
+                await modelIntelligencePage.openModelIntelligence();
 
-                await modelIntelligencePage
-                    .configureComparison();
+                await modelIntelligencePage.configureComparison();
 
-                await modelIntelligencePage
-                    .verifyRunComparisonButton();
+                await modelIntelligencePage.verifyRunComparisonButton();
 
             }
 
