@@ -3,7 +3,7 @@
 ## 1) Overview
 This repository contains **Playwright** end-to-end UI tests for the web application hosted at:
 
-- `https://grounded-topaz.vercel.app/dashboard`
+- `https://grounded-topaz.vercel.app/`
 
 The project uses a **Page Object Model (POM)** approach:
 - **Page objects** live in `pages/` (one class per area of the application)
