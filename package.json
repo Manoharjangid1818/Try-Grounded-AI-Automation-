@@ -1,17 +1,29 @@
 {
-  "name": "grounded-framework",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.1"
-  },
-  "dependencies": {
-    "dotenv": "^17.4.2"
-  }
+    "type": "module",
+    "scripts": {
+        "auth": "npx playwright test tests/auth.setup.spec.js",
+        "test": "npx playwright test",
+        "test:ui": "npx playwright test --ui",
+        "test:list": "npx playwright test --list",
+        "test:headed": "npx playwright test --headed",
+
+        "test:smoke": "npx playwright test --grep @smoke",
+        "test:regression": "npx playwright test --grep @regression",
+
+        "test:bulk": "npx playwright test tests/bulkAudit.spec.js",
+        "test:custom": "npx playwright test tests/customRules.spec.js",
+        "test:model": "npx playwright test tests/modelIntelligence.spec.js",
+        "test:quick": "npx playwright test tests/quickTests.spec.js",
+        "test:monitor": "npx playwright test tests/regressionMonitor.spec.js",
+        "test:response": "npx playwright test tests/responseAudit.spec.js",
+
+        "test:selected": "node scripts/run-selected.js",
+        "test:files": "node scripts/run-files.js",
+
+        "report": "npx playwright show-report"
+    },
+    "dependencies": {
+        "@playwright/test": "^1.54.0",
+        "dotenv": "^16.4.5"
+    }
 }

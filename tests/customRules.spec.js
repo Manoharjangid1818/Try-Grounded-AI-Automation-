@@ -1,30 +1,30 @@
 import { test } from '@playwright/test';
 
-import { CustomRulesPage }
-from '../pages/CustomRulesPage.js';
+import { CustomRulesPage } from '../pages/CustomRulesPage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const customRulesData = readJsonFile('./data/customRules.data.json');
 
 test.use({
-    storageState:'auth/user.json'
+    storageState: 'auth/user.json'
 });
 
-test.describe(
-    'Custom Rules Tests',
-    () => 
-        { test('Verify Custom Rules Works Successfully',
+test.describe('Custom Rules Tests @custom-rules @regression', () => {
 
-            async ({ page }) => {
+    for (const data of customRulesData) {
 
-                const customRulesPage = new CustomRulesPage(page);
+        test(`${data.testCaseId} - ${data.testCaseName} @custom-rules @regression`, async ({ page }, testInfo) => {
 
-                await page.goto('https://grounded-topaz.vercel.app/dashboard');
+            const customRulesPage = new CustomRulesPage(page);
 
-                await customRulesPage.openCustomRulesPage();
+            await page.goto('/');
 
-                await customRulesPage.createRule();
+            await customRulesPage.openCustomRulesPage();
 
-                await customRulesPage.verifyRuleAnalytics();
+            await customRulesPage.createRule(data);
 
-            }
-        );
+            await customRulesPage.verifyRuleAnalytics(data, testInfo);
+        });
     }
-);
+});

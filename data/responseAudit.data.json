@@ -1,0 +1,9 @@
+[
+    {
+        "testCaseId": "RA_001",
+        "testCaseName": "Verify Response Audit Works Successfully",
+        "question": "Who are you?",
+        "aiResponse": "I am Manohar Jangid, QA Trainee Engineer at KiwiQA",
+        "expectedResponse": "I am Manohar Jangid, Employee of KiwiQA Services Pvt Ltd"
+    }
+]

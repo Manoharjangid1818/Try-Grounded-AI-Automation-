@@ -1,107 +1,72 @@
 import { expect } from '@playwright/test';
 
+import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
+
+import { saveJsonResult } from '../utils/resultWriter.js';
+
 export class RegressionMonitorPage {
 
     constructor(page) {
 
         this.page = page;
 
-        // Skip popup
-        this.skipButton =
-            page.getByRole('button', {
-                name: /Skip/i
-            });
+        this.skipButton = page.getByRole('button', {
+            name: /Skip/i
+        });
 
-        // Test History
-        this.testHistoryButton =
-            page.locator(
-                'button:has-text("Test history")'
-            );
+        this.testHistoryButton = page.locator(
+            'button:has-text("Test history")'
+        );
 
-        // Schedule
-        this.scheduleButton =
-            page.getByRole('button', {
-                name: /Schedule/i
-            }).first();
+        this.saveScheduleButton = page.getByRole('button', {
+            name: /Save schedule/i
+        });
 
-        this.saveScheduleButton =
-            page.getByRole('button', {
-                name: /Save schedule/i
-            });
-
-        this.viewSchedulesButton =
-            page.getByRole('button', {
-                name: /VIEW SCHEDULES/i
-            });
-
-        // Regression Monitor
-        this.regressionMonitorButton =
-            page.locator(
-                'button:has-text("Regression monitor")'
-            );
-
-        this.runNowButton =
-            page.getByRole('button', {
-                name: /Run now/i
-            }).first();
-
+        this.regressionMonitorButton = page.locator(
+            'button:has-text("Regression monitor")'
+        );
     }
 
     async openTestHistory() {
 
-        await this.page.waitForLoadState(
-            'networkidle'
-        );
+        await this.page.waitForLoadState('networkidle');
 
         if (
             await this.skipButton
                 .isVisible()
                 .catch(() => false)
         ) {
-
             await this.skipButton.click();
 
-            console.log(
-                'Skip popup handled'
-            );
-
+            console.log('Skip popup handled');
         }
 
-        await expect(
-            this.testHistoryButton
-        ).toBeVisible({
-
+        await expect(this.testHistoryButton).toBeVisible({
             timeout: 30000
-
         });
 
-        await this.testHistoryButton
-            .scrollIntoViewIfNeeded();
+        await this.testHistoryButton.scrollIntoViewIfNeeded();
 
         await this.testHistoryButton.click({
             force: true
         });
 
-        console.log(
-            'Test History page opened'
-        );
+        console.log('Test History page opened');
 
-        await this.page.waitForLoadState(
-            'networkidle'
-        );
-
+        await this.page.waitForLoadState('networkidle');
     }
 
-    async scheduleTest() {
+    async scheduleTest(data) {
 
-        console.log(
-            'Attempting to schedule test...'
-        );
+        console.log('Attempting to schedule test...');
 
         try {
-            // Look for schedule button on the page
-            const scheduleBtn = this.page.locator('button, [role="button"]')
-                .filter({ hasText: /schedule/i })
+
+            const scheduleBtn = this.page
+                .locator('button, [role="button"]')
+                .filter({
+                    hasText: /schedule/i
+                })
                 .first();
 
             const isVisible = await scheduleBtn
@@ -109,171 +74,131 @@ export class RegressionMonitorPage {
                 .catch(() => false);
 
             if (!isVisible) {
-                console.log(
-                    'Schedule button not found or not visible - skipping schedule step'
-                );
+                console.log('Schedule button not found or not visible - skipping schedule step');
                 return;
             }
 
-            console.log(
-                'Schedule button found and visible'
-            );
+            console.log('Schedule button found and visible');
 
             await scheduleBtn.click();
 
-            console.log(
-                'Schedule button clicked'
-            );
+            console.log('Schedule button clicked');
 
-            // Wait for schedule modal to appear
-            await this.page.waitForLoadState(
-                'networkidle'
-            );
+            await this.page.waitForLoadState('networkidle');
 
-            await expect(
-
-                this.saveScheduleButton
-
-            ).toBeVisible({
-
+            await expect(this.saveScheduleButton).toBeVisible({
                 timeout: 30000
-
             });
 
-            console.log(
-                'Save schedule button visible'
-            );
+            console.log('Save schedule button visible');
 
-            // Wait a bit for modal to fully render
-            await this.page.waitForTimeout(
-                1000
-            );
+            await this.page.waitForTimeout(1000);
 
-            // Select schedule card
-            await this.page.locator(
-                'div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2)'
-            ).click();
+            await this.page
+                .locator('div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2)')
+                .click();
 
-            console.log(
-                'Schedule card selected'
-            );
+            console.log('Schedule card selected');
 
-            // Wait for dropdowns to load
-            await this.page.waitForTimeout(
-                1000
-            );
+            await this.page.waitForTimeout(1000);
 
-            // Wait for combobox to be visible
             await expect(
-
-                this.page
-                    .getByRole('combobox')
-                    .first()
-
+                this.page.getByRole('combobox').first()
             ).toBeVisible({
-
                 timeout: 30000
-
             });
 
-            console.log(
-                'Combobox visible, selecting daily'
-            );
-
-            // Daily schedule
             await this.page
                 .getByRole('combobox')
                 .first()
-                .selectOption(
-                    'daily'
-                );
+                .selectOption(data.scheduleFrequency);
 
-            console.log(
-                'Daily schedule selected'
-            );
+            console.log(`${data.scheduleFrequency} schedule selected`);
 
-            // Wait for second dropdown
-            await this.page.waitForTimeout(
-                500
-            );
+            await this.page.waitForTimeout(500);
 
-            // 5 points
             await this.page
                 .getByRole('combobox')
                 .nth(2)
-                .selectOption(
-                    '5'
-                );
+                .selectOption(data.points);
 
-            console.log(
-                '5 points selected'
-            );
+            console.log(`${data.points} points selected`);
 
-            await this.saveScheduleButton
-                .click();
+            await this.saveScheduleButton.click();
 
-            console.log(
-                'Schedule saved successfully'
-            );
+            console.log('Schedule saved successfully');
 
         } catch (error) {
+
             console.log(
                 'Schedule feature not available or error occurred:',
                 error.message
             );
         }
-
     }
 
     async openRegressionMonitor() {
 
-        await expect(
-            this.regressionMonitorButton
-        ).toBeVisible({
-
+        await expect(this.regressionMonitorButton).toBeVisible({
             timeout: 30000
-
         });
 
-        await this.regressionMonitorButton
-            .scrollIntoViewIfNeeded();
+        await this.regressionMonitorButton.scrollIntoViewIfNeeded();
 
-        await this.regressionMonitorButton
-            .click({
-                force: true
-            });
-
-        console.log(
-            'Regression Monitor page opened'
-        );
-
-        await this.page.waitForLoadState(
-            'networkidle'
-        );
-
-    }
-
-    async runRegressionMonitor() {
-
-        await expect(
-            this.runNowButton
-        ).toBeVisible({
-
-            timeout: 30000
-
+        await this.regressionMonitorButton.click({
+            force: true
         });
 
-        await this.runNowButton.click();
+        console.log('Regression Monitor page opened');
 
-        console.log(
-            'Regression Monitor run started'
-        );
-
-        // Observe result
-        await this.page.waitForTimeout(
-            10000
-        );
-
+        await this.page.waitForLoadState('networkidle');
     }
 
+    async runRegressionMonitor(data, testInfo) {
+
+        const runNowButton = this.page
+            .getByRole('button', {
+                name: new RegExp(data.runButtonText, 'i')
+            })
+            .first();
+
+        await expect(runNowButton).toBeVisible({
+            timeout: 30000
+        });
+
+        await runNowButton.click();
+
+        console.log('Regression Monitor run started');
+
+        await this.page.waitForTimeout(10000);
+
+        const screenshotPath = await captureFullPageScreenshot(
+            this.page,
+            testInfo,
+            `${data.testCaseId}-regression-monitor-result`
+        );
+
+        const uiText = await this.page.locator('body').innerText();
+
+        const resultData = {
+            testCaseId: data.testCaseId,
+            testCaseName: data.testCaseName,
+            module: 'Regression Monitor',
+            scheduleFrequency: data.scheduleFrequency,
+            points: data.points,
+            screenshotPath,
+            capturedAt: new Date().toISOString(),
+            uiText
+        };
+
+        const resultPath = saveJsonResult(
+            `${data.testCaseId}-regression-monitor-result.json`,
+            resultData
+        );
+
+        await testInfo.attach('Regression Monitor UI Result JSON', {
+            path: resultPath,
+            contentType: 'application/json'
+        });
+    }
 }

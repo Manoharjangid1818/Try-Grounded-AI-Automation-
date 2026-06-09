@@ -1,38 +1,30 @@
 import { test } from '@playwright/test';
 
-import { ModelIntelligencePage }
-from '../pages/ModelIntelligencePage.js';
+import { ModelIntelligencePage } from '../pages/ModelIntelligencePage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const modelIntelligenceData = readJsonFile('./data/modelIntelligence.data.json');
 
 test.use({
-
-    storageState:
-        'auth/user.json'
+    storageState: 'auth/user.json'
 });
 
-test.describe(
+test.describe('Model Intelligence Tests @model-intelligence @regression', () => {
 
-    'Model Intelligence Tests',
+    for (const data of modelIntelligenceData) {
 
-    () => {
+        test(`${data.testCaseId} - ${data.testCaseName} @model-intelligence @regression`, async ({ page }, testInfo) => {
 
-        test(
+            const modelIntelligencePage = new ModelIntelligencePage(page);
 
-            'Verify Model Intelligence Opens Successfully',
+            await page.goto('/');
 
-            async ({ page }) => {
+            await modelIntelligencePage.openModelIntelligence();
 
-                const modelIntelligencePage = new ModelIntelligencePage(page);
+            await modelIntelligencePage.configureComparison(data);
 
-                await page.goto('https://grounded-topaz.vercel.app/dashboard');
-
-                await modelIntelligencePage.openModelIntelligence();
-
-                await modelIntelligencePage.configureComparison();
-
-                await modelIntelligencePage.verifyRunComparisonButton();
-
-            }
-
-        );
+            await modelIntelligencePage.verifyRunComparisonButton(data, testInfo);
+        });
     }
-);
+});

@@ -1,5 +1,8 @@
-import { defineConfig }
-from '@playwright/test';
+import { defineConfig } from '@playwright/test';
+
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default defineConfig({
 
@@ -8,35 +11,59 @@ export default defineConfig({
     timeout: 300000,
 
     expect: {
-
         timeout: 30000
-
     },
+
+    reporter: [
+        ['list'],
+
+        [
+            'html',
+            {
+                outputFolder: 'playwright-report',
+                open: 'never'
+            }
+        ],
+
+        [
+            'json',
+            {
+                outputFile: 'results/json-results/playwright-results.json'
+            }
+        ],
+
+        [
+            'junit',
+            {
+                outputFile: 'results/json-results/junit-results.xml'
+            }
+        ]
+    ],
 
     use: {
 
-        headless: false,
-
-        viewport: {
-
-            width: 1440,
-            height: 900
-
-        },
-
-        actionTimeout: 20000,
-
         baseURL:
+            process.env.BASE_URL ||
             'https://grounded-topaz.vercel.app/dashboard',
 
-        trace: 'on-first-retry',
+        headless:
+            process.env.HEADLESS === 'true',
 
-        screenshot:
-            'only-on-failure',
+        viewport: {
+            width: 1440,
+            height: 900
+        },
 
-        video:
-            'retain-on-failure'
+        screenshot: 'only-on-failure',
 
-    }
+        video: 'retain-on-failure',
 
+        trace: 'on-first-retry'
+    },
+
+    retries:
+        process.env.CI ? 1 : 0,
+
+    workers:
+        process.env.CI ? 2 : 1
 });

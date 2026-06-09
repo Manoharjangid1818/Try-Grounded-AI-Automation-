@@ -1,196 +1,164 @@
 import { expect } from '@playwright/test';
 
+import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
+
+import { saveJsonResult } from '../utils/resultWriter.js';
+
 export class CustomRulesPage {
 
     constructor(page) {
 
         this.page = page;
 
-        // Skip popup
-        this.skipButton =
-            page.getByRole('button', {
-                name: /Skip/i
-            });
+        this.skipButton = page.getByRole('button', {
+            name: /Skip/i
+        });
 
-        // Navigation
-        this.customRulesButton =
-            page.getByRole('button', {
-                name: /Custom rules/i
-            });
+        this.customRulesButton = page.getByRole('button', {
+            name: /Custom rules/i
+        });
 
-        // Rule fields
-        this.expectedAnswerTextbox =
-            page.getByRole('textbox', {
-                name: /KiwiQA was founded in 2010/i
-            });
+        this.expectedAnswerTextbox = page.getByRole('textbox', {
+            name: /KiwiQA was founded in 2010/i
+        });
 
-        this.incorrectAnswerTextbox =
-            page.getByRole('textbox', {
-                name: /KiwiQA was founded in 2020/i
-            });
+        this.incorrectAnswerTextbox = page.getByRole('textbox', {
+            name: /KiwiQA was founded in 2020/i
+        });
 
-        this.sourceTextbox =
-            page.getByRole('textbox', {
-                name: /kiwiqa.ai\/about/i
-            });
+        this.sourceTextbox = page.getByRole('textbox', {
+            name: /kiwiqa.ai\/about/i
+        });
 
-        this.addRuleButton =
-            page.getByRole('button', {
-                name: /\+ Add rule/i
-            });
+        this.addRuleButton = page.getByRole('button', {
+            name: /\+ Add rule/i
+        });
 
-        this.saveButton =
-            page.getByRole('button', {
-                name: /^Save →$/i
-            });
+        this.saveButton = page.getByRole('button', {
+            name: /^Save →$/i
+        });
 
-        this.saveRuleSetButton =
-            page.getByRole('button', {
-                name: /Save rule set/i
-            });
+        this.saveRuleSetButton = page.getByRole('button', {
+            name: /Save rule set/i
+        });
 
-        // Analytics
-        this.ruleAnalyticsButton =
-            page.getByRole('button', {
-                name: /Rule analytics/i
-            });
-
-        this.ruleCard =
-            page.locator('div')
-                .filter({
-                    hasText:
-                        'VERIFIED FACT CHECKING'
-                })
-                .nth(3);
-
+        this.ruleAnalyticsButton = page.getByRole('button', {
+            name: /Rule analytics/i
+        });
     }
 
     async openCustomRulesPage() {
 
-        await this.page.waitForLoadState(
-            'networkidle'
-        );
+        await this.page.waitForLoadState('networkidle');
 
         if (
             await this.skipButton
                 .isVisible()
                 .catch(() => false)
         ) {
-
             await this.skipButton.click();
 
-            console.log(
-                'Skip popup handled'
-            );
-
+            console.log('Skip popup handled');
         }
 
-        await expect(
-            this.customRulesButton
-        ).toBeVisible({
-
+        await expect(this.customRulesButton).toBeVisible({
             timeout: 30000
-
         });
 
         await this.customRulesButton.click({
             force: true
         });
 
-        console.log(
-            'Custom Rules page opened'
-        );
-
+        console.log('Custom Rules page opened');
     }
 
-    async createRule() {
+    async createRule(data) {
 
-        await expect(
-            this.expectedAnswerTextbox
-        ).toBeVisible({
-
+        await expect(this.expectedAnswerTextbox).toBeVisible({
             timeout: 30000
-
         });
 
-        await this.expectedAnswerTextbox.fill(
-            'KiwiQA was founded in 2010'
-        );
+        await this.expectedAnswerTextbox.fill(data.expectedAnswer);
 
-        console.log(
-            'Expected answer entered'
-        );
+        console.log('Expected answer entered');
 
-        await this.incorrectAnswerTextbox.fill(
-            'KiwiQA was founded in 2020'
-        );
+        await this.incorrectAnswerTextbox.fill(data.incorrectAnswer);
 
-        console.log(
-            'Incorrect answer entered'
-        );
+        console.log('Incorrect answer entered');
 
-        await this.sourceTextbox.fill(
-            'kiwiqa.ai/about'
-        );
+        await this.sourceTextbox.fill(data.source);
 
-        console.log(
-            'Source entered'
-        );
+        console.log('Source entered');
 
         await this.addRuleButton.click();
 
-        console.log(
-            'Rule added'
-        );
+        console.log('Rule added');
 
         await this.saveButton.click();
 
-        console.log(
-            'Save clicked'
-        );
+        console.log('Save clicked');
 
         await this.saveRuleSetButton.click();
 
-        console.log(
-            'Rule set saved'
-        );
-
+        console.log('Rule set saved');
     }
 
-    async verifyRuleAnalytics() {
+    async verifyRuleAnalytics(data, testInfo) {
 
-        await expect(
-            this.ruleAnalyticsButton
-        ).toBeVisible({
-
+        await expect(this.ruleAnalyticsButton).toBeVisible({
             timeout: 30000
-
         });
 
         await this.ruleAnalyticsButton.click();
 
-        console.log(
-            'Rule Analytics opened'
-        );
+        console.log('Rule Analytics opened');
 
-        await expect(
-            this.ruleCard
-        ).toBeVisible({
+        const ruleCard = this.page
+            .locator('div')
+            .filter({
+                hasText: data.analyticsCardText
+            })
+            .nth(3);
 
+        await expect(ruleCard).toBeVisible({
             timeout: 30000
-
         });
 
-        await this.ruleCard.click();
+        await ruleCard.click();
 
-        console.log(
-            'Rule card opened'
+        console.log('Rule card opened');
+
+        const screenshotPath = await captureFullPageScreenshot(
+            this.page,
+            testInfo,
+            `${data.testCaseId}-custom-rules-result`
         );
 
-        await this.page.waitForTimeout(
-            10000
+        const uiText = await this.page.locator('body').innerText();
+
+        const resultData = {
+            testCaseId: data.testCaseId,
+            testCaseName: data.testCaseName,
+            module: 'Custom Rules',
+            expectedAnswer: data.expectedAnswer,
+            incorrectAnswer: data.incorrectAnswer,
+            source: data.source,
+            analyticsCardText: data.analyticsCardText,
+            screenshotPath,
+            capturedAt: new Date().toISOString(),
+            uiText
+        };
+
+        const resultPath = saveJsonResult(
+            `${data.testCaseId}-custom-rules-result.json`,
+            resultData
         );
 
+        await testInfo.attach('Custom Rules UI Result JSON', {
+            path: resultPath,
+            contentType: 'application/json'
+        });
+
+        await this.page.waitForTimeout(3000);
     }
-
 }

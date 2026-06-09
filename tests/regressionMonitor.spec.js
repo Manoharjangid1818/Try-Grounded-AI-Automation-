@@ -1,52 +1,32 @@
 import { test } from '@playwright/test';
 
-import { RegressionMonitorPage }
-from '../pages/RegressionMonitorPage.js';
+import { RegressionMonitorPage } from '../pages/RegressionMonitorPage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const regressionMonitorData = readJsonFile('./data/regressionMonitor.data.json');
 
 test.use({
-
-    storageState:
-        'auth/user.json'
-
+    storageState: 'auth/user.json'
 });
 
-test.describe(
+test.describe('Regression Monitor Tests @regression-monitor @regression', () => {
 
-    'Regression Monitor Tests',
+    for (const data of regressionMonitorData) {
 
-    () => {
+        test(`${data.testCaseId} - ${data.testCaseName} @regression-monitor @regression`, async ({ page }, testInfo) => {
 
-        test(
+            const regressionMonitorPage = new RegressionMonitorPage(page);
 
-            'Verify Regression Monitor Works Successfully',
+            await page.goto('/');
 
-            async ({ page }) => {
+            await regressionMonitorPage.openTestHistory();
 
-                const regressionMonitorPage =
-                    new RegressionMonitorPage(
-                        page
-                    );
+            await regressionMonitorPage.scheduleTest(data);
 
-                await page.goto(
-                    'https://grounded-topaz.vercel.app/dashboard'
-                );
+            await regressionMonitorPage.openRegressionMonitor();
 
-                await regressionMonitorPage
-                    .openTestHistory();
-
-                await regressionMonitorPage
-                    .scheduleTest();
-
-                await regressionMonitorPage
-                    .openRegressionMonitor();
-
-                await regressionMonitorPage
-                    .runRegressionMonitor();
-
-            }
-
-        );
-
+            await regressionMonitorPage.runRegressionMonitor(data, testInfo);
+        });
     }
-
-);
+});

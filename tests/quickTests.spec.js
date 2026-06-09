@@ -1,41 +1,30 @@
 import { test } from '@playwright/test';
 
-import { QuickTestsPage }
-from '../pages/QuickTestsPage.js';
+import { QuickTestsPage } from '../pages/QuickTestsPage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const quickTestsData = readJsonFile('./data/quickTests.data.json');
 
 test.use({
-
-    storageState:
-        'auth/user.json'
+    storageState: 'auth/user.json'
 });
 
-test.describe(
+test.describe('Quick Tests @quick-tests @smoke', () => {
 
-    'Quick Tests',
+    for (const data of quickTestsData) {
 
-    () => {
+        test(`${data.testCaseId} - ${data.testCaseName} @quick-tests @smoke`, async ({ page }, testInfo) => {
 
-        test(
+            const quickTestsPage = new QuickTestsPage(page);
 
-            'Verify Quick Tests Suite Runs Successfully',
+            await page.goto('/');
 
-            async ({ page }) => {
+            await quickTestsPage.openQuickTestsPage();
 
-                // Create page object
-                const quickTestsPage = new QuickTestsPage(page);
+            await quickTestsPage.runQuickTestSuite(data);
 
-                // Open app
-                await page.goto('https://grounded-topaz.vercel.app/dashboard');
-
-                // Open Quick Tests
-                await quickTestsPage.openQuickTestsPage();
-
-                // Run Suite
-                await quickTestsPage.runQuickTestSuite();
-
-                // Verify results
-                await quickTestsPage.verifyQuickTestCompleted();
-            }
-        );
+            await quickTestsPage.verifyQuickTestCompleted(data, testInfo);
+        });
     }
-);
+});

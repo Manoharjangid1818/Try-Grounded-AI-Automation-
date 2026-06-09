@@ -1,0 +1,10 @@
+[
+    {
+        "testCaseId": "CR_001",
+        "testCaseName": "Verify Custom Rule Creation and Analytics",
+        "expectedAnswer": "KiwiQA was founded in 2010",
+        "incorrectAnswer": "KiwiQA was founded in 2020",
+        "source": "kiwiqa.ai/about",
+        "analyticsCardText": "VERIFIED FACT CHECKING"
+    }
+]

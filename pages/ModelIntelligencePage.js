@@ -1,61 +1,45 @@
 import { expect } from '@playwright/test';
 
+import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
+
+import { saveJsonResult } from '../utils/resultWriter.js';
+
 export class ModelIntelligencePage {
 
     constructor(page) {
 
         this.page = page;
 
-        this.skipButton =
-            page.getByRole('button', {
-                name: /Skip/i
-            });
+        this.skipButton = page.getByRole('button', {
+            name: /Skip/i
+        });
 
-        this.modelIntelligenceButton =
-            page.getByRole('button', {
-                name: /Model Intelligence/i
-            });
+        this.modelIntelligenceButton = page.getByRole('button', {
+            name: /Model Intelligence/i
+        });
 
-        this.claudeModel =
-            page.locator('div')
-                .filter({
-                    hasText: /^Claude Opus 4\.5$/
-                })
-                .nth(1);
+        this.auditDropdown = page.getByRole('combobox');
 
-        this.auditDropdown =
-            page.getByRole('combobox');
-
-        this.runComparisonButton =
-            page.getByRole('button', {
-                name: /Run Comparison/i
-            });
-
+        this.runComparisonButton = page.getByRole('button', {
+            name: /Run Comparison/i
+        });
     }
 
     async openModelIntelligence() {
 
-        await this.page.waitForLoadState(
-            'networkidle'
-        );
+        await this.page.waitForLoadState('networkidle');
 
         if (
             await this.skipButton
                 .isVisible()
                 .catch(() => false)
         ) {
-
             await this.skipButton.click();
 
-            console.log(
-                'Skip popup handled'
-            );
-
+            console.log('Skip popup handled');
         }
 
-        await expect(
-            this.modelIntelligenceButton
-        ).toBeVisible({
+        await expect(this.modelIntelligenceButton).toBeVisible({
             timeout: 30000
         });
 
@@ -63,66 +47,77 @@ export class ModelIntelligencePage {
             force: true
         });
 
-        console.log(
-            'Model Intelligence page opened'
-        );
-
+        console.log('Model Intelligence page opened');
     }
 
-    async configureComparison() {
+    async configureComparison(data) {
 
-        await expect(
-            this.claudeModel
-        ).toBeVisible({
+        const modelOption = this.page
+            .locator('div')
+            .filter({
+                hasText: new RegExp(`^${data.modelName.replace('.', '\\.')}$`)
+            })
+            .nth(1);
+
+        await expect(modelOption).toBeVisible({
             timeout: 30000
         });
 
-        await this.claudeModel.click();
+        await modelOption.click();
 
-        console.log(
-            'Claude Opus 4.5 selected'
-        );
+        console.log(`${data.modelName} selected`);
 
-        await expect(
-            this.auditDropdown
-        ).toBeVisible({
+        await expect(this.auditDropdown).toBeVisible({
             timeout: 30000
         });
 
-        await this.auditDropdown.selectOption(
-            'Bulk Audit 1'
-        );
+        await this.auditDropdown.selectOption(data.auditName);
 
-        console.log(
-            'Bulk Audit 1 selected'
-        );
-
+        console.log(`${data.auditName} selected`);
     }
 
-    async verifyRunComparisonButton() {
+    async verifyRunComparisonButton(data, testInfo) {
 
-        await expect(
-            this.runComparisonButton
-        ).toBeVisible({
+        await expect(this.runComparisonButton).toBeVisible({
             timeout: 30000
         });
 
-        console.log(
-            'Run Comparison button visible'
+        console.log('Run Comparison button visible');
+
+        const disabled = await this.runComparisonButton.isDisabled();
+
+        console.log(`Run Comparison disabled: ${disabled}`);
+
+        const screenshotPath = await captureFullPageScreenshot(
+            this.page,
+            testInfo,
+            `${data.testCaseId}-model-intelligence-result`
         );
 
-        const disabled =
-            await this.runComparisonButton
-                .isDisabled();
+        const uiText = await this.page.locator('body').innerText();
 
-        console.log(
-            `Run Comparison disabled: ${disabled}`
+        const resultData = {
+            testCaseId: data.testCaseId,
+            testCaseName: data.testCaseName,
+            module: 'Model Intelligence',
+            modelName: data.modelName,
+            auditName: data.auditName,
+            runComparisonDisabled: disabled,
+            screenshotPath,
+            capturedAt: new Date().toISOString(),
+            uiText
+        };
+
+        const resultPath = saveJsonResult(
+            `${data.testCaseId}-model-intelligence-result.json`,
+            resultData
         );
 
-        await this.page.waitForTimeout(
-            10000
-        );
+        await testInfo.attach('Model Intelligence UI Result JSON', {
+            path: resultPath,
+            contentType: 'application/json'
+        });
 
+        await this.page.waitForTimeout(3000);
     }
-
 }

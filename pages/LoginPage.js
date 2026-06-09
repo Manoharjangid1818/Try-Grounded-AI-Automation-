@@ -1,29 +1,41 @@
-export class LoginPage{
-    constructor(page)
-    {
-        this.page = page;//Stores browser page globally
+export class LoginPage {
 
-        this.signInButton = page.getByRole('button',{ name:'Sign in'});
+    constructor(page) {
 
-        this.emailTextBox = page.getByRole('textbox', { name: 'Email address or username'});
+        this.page = page;
 
-        this.continueButton = page.getByRole('button', { name: 'COntinue'});
+        this.signInButton = page.getByRole('button', {
+            name: 'Sign in'
+        });
 
-        this.passwordTextbox = page.getByRole('textbox', { name:'Password'});
+        this.emailTextBox = page.getByRole('textbox', {
+            name: 'Email address or username'
+        });
+
+        this.continueButton = page.getByRole('button', {
+            name: /Continue/i
+        });
+
+        this.passwordTextbox = page.getByRole('textbox', {
+            name: 'Password'
+        });
     }
 
-    async gotoLoginPage()
-    {
+    async gotoLoginPage() {
 
-    await this.page.goto('https://grounded-topaz.vercel.app/');
+        await this.page.goto('/');
     }
 
-    async login(email, password)
-    {
+    async login(email, password) {
+
         await this.signInButton.click();
+
         await this.emailTextBox.fill(email);
+
         await this.continueButton.click();
+
         await this.passwordTextbox.fill(password);
+
         await this.continueButton.click();
     }
 }

@@ -1,42 +1,32 @@
-import { test }
-from '@playwright/test';
+import { test } from '@playwright/test';
 
-import { ResponseAuditPage }
-from '../pages/ResponseAuditPage.js';
+import { ResponseAuditPage } from '../pages/ResponseAuditPage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const responseAuditData = readJsonFile('./data/responseAudit.data.json');
 
 test.use({
-
     storageState: 'auth/user.json'
-
 });
 
-test(
+test.describe('Response Audit Tests @response-audit @smoke', () => {
 
-    'Verify Response Audit Works Successfully',
+    for (const data of responseAuditData) {
 
-    async ({ page }) => {
+        test(`${data.testCaseId} - ${data.testCaseName} @response-audit @smoke`, async ({ page }, testInfo) => {
 
-        // Create page object
-        const auditPage =
-            new ResponseAuditPage(page);
+            const auditPage = new ResponseAuditPage(page);
 
-        // Open Response Audit page
-        await auditPage.openAuditPage();
+            await auditPage.openAuditPage();
 
-        // Perform audit
-        await auditPage.performAudit(
+            await auditPage.performAudit(
+                data.question,
+                data.aiResponse,
+                data.expectedResponse
+            );
 
-            'Who are you?',
-
-            'I am Manohar Jangid, QA Trainee Engineer at KiwiQA',
-
-            'I am Manohar Jangid, Employee of KiwiQA Services Pvt Ltd'
-
-        );
-
-        // Verify audit completion
-        await auditPage.verifyAuditCompleted();
-
+            await auditPage.verifyAuditCompleted(data, testInfo);
+        });
     }
-
-);
+});

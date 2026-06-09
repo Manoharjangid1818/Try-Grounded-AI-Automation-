@@ -1,52 +1,64 @@
 import { test } from '@playwright/test';
 
-import { BulkAuditPage }
-from '../pages/BulkAuditPage.js';
+import { BulkAuditPage } from '../pages/BulkAuditPage.js';
+
+import { readJsonFile } from '../utils/dataReader.js';
+
+const bulkAuditData = readJsonFile('./data/bulkAudit.data.json');
 
 test.use({
-
-    storageState:
-        'auth/user.json'
-
+    storageState: 'auth/user.json'
 });
 
-test.describe(
+test.describe('Bulk Audit Tests @bulk @regression', () => {
 
-    'Bulk Audit Tests',
+    for (const data of bulkAuditData) {
 
-    () => {
+        test(`${data.testCaseId} - ${data.testCaseName} @bulk @regression`, async ({ page }, testInfo) => {
 
-        test(
+            const bulkAuditPage = new BulkAuditPage(page);
 
-            'Verify Bulk Audit Works Successfully',
+            await page.goto('/dashboard');
 
-            async ({ page }) => {
 
-                // Create page object
-                const bulkAuditPage =
-                    new BulkAuditPage(page);
+            await bulkAuditPage.openBulkAuditPage();
 
-                // Open app
-                await page.goto(
-                    'https://grounded-topaz.vercel.app/dashboard'
-                );
+            if (data.scenarioType === 'happyFlow') {
 
-                // Open Bulk Audit
-                await bulkAuditPage
-                    .openBulkAuditPage();
+                await bulkAuditPage.createBulkAudit(data);
 
-                // Create audit
-                await bulkAuditPage
-                    .createBulkAudit();
-
-                // Verify results
-                await bulkAuditPage
-                    .verifyBulkAuditCompleted();
-
+                await bulkAuditPage.verifyBulkAuditCompleted(data, testInfo);
             }
 
-        );
+            else if (data.scenarioType === 'runButtonDisabledBeforeRows') {
 
+                await bulkAuditPage.verifyRunButtonDisabledBeforeRowsLoaded(data, testInfo);
+            }
+
+            else if (data.scenarioType === 'emptyAuditNameValidation') {
+
+                await bulkAuditPage.verifyEmptyAuditNameValidation(data, testInfo);
+            }
+
+            else if (data.scenarioType === 'resetButton') {
+
+                await bulkAuditPage.verifyResetButtonClearsForm(data, testInfo);
+            }
+
+            else if (data.scenarioType === 'loadExample') {
+
+                await bulkAuditPage.verifyLoadExampleWorks(data, testInfo);
+            }
+
+            else if (data.scenarioType === 'referenceDocument') {
+
+                await bulkAuditPage.verifyReferenceDocumentOption(data, testInfo);
+            }
+
+            else {
+
+                throw new Error(`Invalid scenarioType found: ${data.scenarioType}`);
+            }
+        });
     }
-
-);
+});
