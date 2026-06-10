@@ -27,7 +27,7 @@
         "contactName": "Maria Johnson (Sample Contact)"
     },
     {
-        "testCaseId": "BA_005",
+        "testCaseId": "BA_004",
         "scenarioType": "runButtonDisabledBeforeRows",
         "testCaseName": "Verify Run button is disabled before rows loaded",
         "auditName": "Bulk Audit Disabled Button Check",
@@ -36,7 +36,7 @@
         "contactName": "Manohar Jangid"
     },
     {
-        "testCaseId": "BA_008",
+        "testCaseId": "BA_005",
         "scenarioType": "emptyAuditNameValidation",
         "testCaseName": "Verify empty audit name validation",
         "source": "HubSpot",
@@ -45,7 +45,7 @@
         "expectedValidationText": "required"
     },
     {
-        "testCaseId": "BA_009",
+        "testCaseId": "BA_006",
         "scenarioType": "resetButton",
         "testCaseName": "Verify Reset button clears Bulk Audit form",
         "auditName": "Bulk Audit Reset Check",
@@ -55,14 +55,14 @@
         "resetButtonText": "Reset"
     },
     {
-        "testCaseId": "BA_010",
+        "testCaseId": "BA_007",
         "scenarioType": "loadExample",
         "testCaseName": "Verify Load Example works in Bulk Audit",
         "loadExampleButtonText": "Load Example",
         "expectedLoadedText": "rows loaded"
     },
     {
-        "testCaseId": "BA_011",
+        "testCaseId": "BA_008",
         "scenarioType": "referenceDocument",
         "testCaseName": "Verify upload or paste reference document option",
         "referenceOptionText": "Upload or paste a reference document",
