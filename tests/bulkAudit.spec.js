@@ -20,43 +20,34 @@ test.describe('Bulk Audit Tests @bulk @regression', () => {
 
             await page.goto('/dashboard');
 
-
             await bulkAuditPage.openBulkAuditPage();
 
             if (data.scenarioType === 'happyFlow') {
-
                 await bulkAuditPage.createBulkAudit(data);
-
                 await bulkAuditPage.verifyBulkAuditCompleted(data, testInfo);
             }
 
             else if (data.scenarioType === 'runButtonDisabledBeforeRows') {
-
                 await bulkAuditPage.verifyRunButtonDisabledBeforeRowsLoaded(data, testInfo);
             }
 
             else if (data.scenarioType === 'emptyAuditNameValidation') {
-
                 await bulkAuditPage.verifyEmptyAuditNameValidation(data, testInfo);
             }
 
             else if (data.scenarioType === 'resetButton') {
-
                 await bulkAuditPage.verifyResetButtonClearsForm(data, testInfo);
             }
 
             else if (data.scenarioType === 'loadExample') {
-
                 await bulkAuditPage.verifyLoadExampleWorks(data, testInfo);
             }
 
             else if (data.scenarioType === 'referenceDocument') {
-
                 await bulkAuditPage.verifyReferenceDocumentOption(data, testInfo);
             }
 
             else {
-
                 throw new Error(`Invalid scenarioType found: ${data.scenarioType}`);
             }
         });

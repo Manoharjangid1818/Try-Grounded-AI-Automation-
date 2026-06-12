@@ -477,8 +477,7 @@ export class BulkAuditPage {
 
         console.log('Load Example clicked');
 
-        // Rows-loaded text is dynamic and may be absent briefly; wait for either
-        // the rows-loaded message OR for the Run button to become enabled.
+        // After loading, wait for rows to be present (or at least the Run button enablement).
         const rowsLoadedText = this.page.getByText(/\d+\s+rows?\s+loaded/i);
         await expect(rowsLoadedText).toBeVisible({
             timeout: 60000
@@ -487,55 +486,72 @@ export class BulkAuditPage {
             await expect(runButton).toBeEnabled({ timeout: 60000 });
         });
 
-
-
         console.log('Load Example data loaded successfully');
 
-        await this.captureBulkAuditEvidence(
-            data,
-            testInfo,
-            'load-example-result'
-        );
-
-        await this.page.waitForTimeout(3000);
+        // Run the batch after data load, then wait until results screen is visible.
+        await this.runBulkAudit();
+        await this.verifyBulkAuditCompleted(data, testInfo);
     }
 
     async verifyReferenceDocumentOption(data, testInfo) {
 
+        // Fill required form fields
+        await expect(this.auditNameTextbox).toBeVisible({
+            timeout: 30000
+        });
+
+        await this.auditNameTextbox.fill(data.auditName);
+        console.log('Audit name entered');
+
+        await this.selectSource(data.source);
+
+        await this.selectRecordType(data.recordType);
+
+        await this.selectContact(data.contactName);
+
+        // BA_008: load rows before selecting reference option
+        await this.pullAllRecords();
+
+        // Reference document option
         const referenceOption = this.page.getByText(
             new RegExp(data.referenceOptionText, 'i')
         );
+
 
         await expect(referenceOption).toBeVisible({
             timeout: 30000
         });
 
         await referenceOption.click();
-
         console.log('Reference document option clicked');
 
-        const referenceTextbox = this.page
-            .getByRole('textbox')
-            .last();
+        // App can contain multiple textboxes; the reference textbox is typically last.
+        const referenceTextbox = this.page.getByRole('textbox').last();
 
         await expect(referenceTextbox).toBeVisible({
             timeout: 30000
         });
 
         await referenceTextbox.fill(data.referenceDocumentText);
-
         console.log('Reference document text entered');
 
-        await expect(referenceTextbox).toHaveValue(
-            data.referenceDocumentText
-        );
+        await expect(referenceTextbox).toHaveValue(data.referenceDocumentText);
+
+        // Run the batch after reference doc is provided.
+        await this.runBulkAudit();
+
+        // Wait for results screen
+        await expect(this.resultScreen).toBeVisible({
+            timeout: 120000
+        });
+
+        // Wait at results screen for 4 seconds as requested.
+        await this.page.waitForTimeout(4000);
 
         await this.captureBulkAuditEvidence(
             data,
             testInfo,
             'reference-document-result'
         );
-
-        await this.page.waitForTimeout(3000);
     }
 }

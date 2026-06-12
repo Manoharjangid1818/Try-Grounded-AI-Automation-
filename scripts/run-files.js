@@ -20,6 +20,9 @@ const files = filePlan.files.join(' ');
 
 console.log(`Running selected files: ${files}`);
 
-execSync(`npx playwright test ${files}`, {
-    stdio: 'inherit'
-});
+execSync(
+    `set BASE_URL=https://grounded-topaz.vercel.app/dashboard && npx playwright test ${files}`,
+    {
+        stdio: 'inherit'
+    }
+);

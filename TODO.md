@@ -1,14 +1,7 @@
-# TODO - Bulk Audit dynamic locators
+# TODO
 
-## Steps
-- [x] Inspect current Bulk Audit POM, spec, and data
-- [x] Update `pages/BulkAuditPage.js`
-  - [x] `runBulkAudit()` dynamic Run button locator using `/Run\s+\d+\s+tests?/i`
-  - [x] `pullAllRecords()` dynamic rows loaded locator using `/\d+\s+rows?\s+loaded/i`
-  - [x] `createBulkAudit(data)` remove expectedRowsText/runButtonText dependencies
-  - [x] BA_005: disabled run button locator using `/Run/i` with `.last()`
-  - [x] BA_010: rows loaded assertion dynamic regex (no exact `3 rows loaded`)
-- [x] Update `data/bulkAudit.data.json`
-  - [x] Remove `expectedRowsText` / `runButtonText` from happyFlow cases
-  - [x] Remove `runButtonText` from BA_005
-  - [x] Set BA_010 `expectedLoadedText` to `
+## Bulk Audit BA_008 referenceDocument step order
+- [ ] Update `pages/BulkAuditPage.js` `verifyReferenceDocumentOption` to click **Pull all** (using `this.pullAllRecords()`) after selecting source/recordType/contact and before clicking the reference option text.
+- [ ] Run Playwright for BA_008 (`tests/bulkAudit.spec.js --grep BA_008`) and ensure it passes.
+- [ ] Confirm evidence capture still works (screenshot + JSON attachment).
+

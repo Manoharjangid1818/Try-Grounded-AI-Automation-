@@ -1,9 +1,24 @@
 [
     {
         "testCaseId": "RA_001",
-        "testCaseName": "Verify Response Audit Works Successfully",
-        "question": "Who are you?",
-        "aiResponse": "I am Manohar Jangid, QA Trainee Engineer at KiwiQA",
-        "expectedResponse": "I am Manohar Jangid, Employee of KiwiQA Services Pvt Ltd"
+        "scenarioType": "connectedSource",
+        "testCaseName": "Verify Response Audit with HubSpot Contact",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "recordName": "Manohar Jangid",
+        "getResponseButtonText": "Get response",
+        "runAuditButtonText": "Run audit",
+        "expectedResultText": "Score breakdown"
+    },
+    {
+        "testCaseId": "RA_002",
+        "scenarioType": "connectedSource",
+        "testCaseName": "Verify Response Audit with Zendesk Article",
+        "source": "Zendesk",
+        "recordType": "ARTICLES",
+        "recordName": "About us",
+        "getResponseButtonText": "Get response",
+        "runAuditButtonText": "Run audit",
+        "expectedResultText": "Score breakdown"
     }
 ]

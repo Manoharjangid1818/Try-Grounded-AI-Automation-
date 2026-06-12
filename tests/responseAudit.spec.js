@@ -20,13 +20,17 @@ test.describe('Response Audit Tests @response-audit @smoke', () => {
 
             await auditPage.openAuditPage();
 
-            await auditPage.performAudit(
-                data.question,
-                data.aiResponse,
-                data.expectedResponse
-            );
+            if (data.scenarioType === 'connectedSource') {
 
-            await auditPage.verifyAuditCompleted(data, testInfo);
+                await auditPage.performConnectedSourceAudit(data);
+
+                await auditPage.verifyAuditCompleted(data, testInfo);
+            }
+
+            else {
+
+                throw new Error(`Invalid scenarioType found: ${data.scenarioType}`);
+            }
         });
     }
 });

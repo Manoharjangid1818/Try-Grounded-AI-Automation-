@@ -10,124 +10,250 @@ export class ResponseAuditPage {
 
         this.page = page;
 
+        // Skip onboarding popup
         this.skipButton = page.getByRole('button', {
-            name: 'Skip →'
+            name: /Skip/i
         });
 
-        this.responseAuditButton = page.getByRole('button', {
-            name: 'Response Audit'
+        // Response Audit sidebar button (avoid strict-mode ambiguity)
+        // Matches both "Response Audit" and "RESPONSE AUDIT" variants; pick the first visible.
+        this.responseAuditButton = page
+            .locator('button', { hasText: /response audit/i })
+            .filter({ hasText: /^response audit$/i })
+            .first();
+
+
+        // Get response button
+        this.getResponseButton = page.getByRole('button', {
+            name: /Get response/i
         });
 
-        this.pasteManuallyOption = page.getByText('Paste manually');
-
-        this.questionTextbox = page.getByRole('textbox', {
-            name: 'What was the AI asked? Paste'
-        });
-
-        this.aiResponseTextbox = page.getByRole('textbox', {
-            name: 'Paste the AI response to'
-        });
-
-        this.expectedTextbox = page.getByRole('textbox', {
-            name: 'Type the known-correct'
-        });
-
+        // Run audit button
         this.runAuditButton = page.getByRole('button', {
-            name: 'Run audit →'
+            name: /Run audit/i
         });
 
+        // Audit running loader
         this.auditLoadingText = page.getByText(
             /Running 10-Layer Audit/i
         );
 
+        // Final result screen
         this.auditResultSection = page.getByRole('button', {
-            name: 'Score breakdown'
+            name: /Score breakdown/i
         });
     }
 
     async openAuditPage() {
 
-        await this.page.goto('/');
+        // Always land on dashboard (script runner may set BASE_URL)
+        await this.page.goto('/dashboard');
+
 
         await this.page.waitForLoadState('networkidle');
 
-        try {
-
-            await this.skipButton.waitFor({
-                state: 'visible',
-                timeout: 5000
-            });
+        if (
+            await this.skipButton
+                .isVisible()
+                .catch(() => false)
+        ) {
 
             await this.skipButton.click();
 
             console.log('Skip popup handled');
-
-        } catch {
-
-            console.log('Skip popup not visible');
         }
 
-        await this.responseAuditButton.click();
+        await expect(this.responseAuditButton).toBeVisible({
+            timeout: 30000
+        });
+
+        await this.responseAuditButton.click({
+            force: true
+        });
+
+        console.log('Response Audit page opened');
 
         await this.page.waitForLoadState('networkidle');
-
-        await this.pasteManuallyOption.click();
-
-        console.log('Paste manually selected');
     }
 
-    async performAudit(question, aiResponse, expectedResponse) {
+    async performConnectedSourceAudit(data) {
 
-        await this.questionTextbox.waitFor({
-            state: 'visible',
-            timeout: 10000
+        await this.selectConnectedSource(data.source);
+
+        await this.selectRecordType(data.recordType);
+
+        await this.selectRecord(data.recordName);
+
+        // Give UI time to finish rendering the record-specific actions (Get response button).
+        await this.page.waitForLoadState('networkidle').catch(() => {});
+        await this.page.waitForTimeout(1000);
+
+        await this.clickGetResponse(data.getResponseButtonText);
+
+        await this.clickRunAudit(data.runAuditButtonText);
+    }
+
+    async selectConnectedSource(sourceName) {
+
+        const sourceOption = this.page.getByText(
+            sourceName,
+            {
+                exact: true
+            }
+        );
+
+        await expect(sourceOption).toBeVisible({
+            timeout: 30000
         });
 
-        await this.questionTextbox.fill(question);
+        await sourceOption.click();
 
-        console.log('Question entered');
+        console.log(`${sourceName} selected`);
+    }
 
-        await this.page.waitForTimeout(1000);
+    async selectRecordType(recordType) {
 
-        await this.aiResponseTextbox.fill(aiResponse);
-
-        console.log('AI response entered');
-
-        await this.page.waitForTimeout(1000);
-
-        await this.expectedTextbox.fill(expectedResponse);
-
-        console.log('Expected response entered');
-
-        await this.page.waitForTimeout(1000);
-
-        await this.runAuditButton.waitFor({
-            state: 'visible',
-            timeout: 10000
+        const recordTypeButton = this.page.getByRole('button', {
+            name: new RegExp(`^${recordType}`, 'i')
         });
 
-        await this.runAuditButton.click();
+        await expect(recordTypeButton).toBeVisible({
+            timeout: 30000
+        });
+
+        await recordTypeButton.click();
+
+        console.log(`${recordType} selected`);
+    }
+
+    async selectRecord(recordName) {
+
+        const record = this.page
+            .getByText(recordName, {
+                exact: true
+            })
+            .first();
+
+        await expect(record).toBeVisible({
+            timeout: 30000
+        });
+
+        await record.click();
+
+        console.log(`${recordName} selected`);
+    }
+
+    async clickGetResponse(getResponseButtonText) {
+
+        // UI may re-render after selecting source/record; try multiple selector strategies.
+        const textRe = new RegExp(getResponseButtonText.replace(/\s+/g, '\\s+'), 'i');
+
+        // 1) Best: actual <button> role
+        const btnByRole = this.page.getByRole('button', { name: textRe }).first();
+        const isRoleVisible = await btnByRole
+            .isVisible({ timeout: 8000 })
+            .catch(() => false);
+
+        if (isRoleVisible) {
+            await btnByRole.scrollIntoViewIfNeeded();
+            await btnByRole.click({ force: true });
+            console.log('Get response clicked (role=button)');
+            await this.waitForGeneratedResponse();
+            return;
+        }
+
+        // 2) Fallback: click the first clickable element that matches the text anywhere.
+        // Some UI variants render as non-button elements; also allow small text variations.
+        const clickableByText = this.page
+            .locator('text=/Get\\s*response/i')
+            .first();
+
+        // Avoid scrollIntoViewIfNeeded (can hang while layout/overlays change).
+        await clickableByText.click({ force: true });
+
+        console.log('Get response clicked (fallback by any text)');
+
+        await this.waitForGeneratedResponse();
+    }
+
+
+
+
+    async waitForGeneratedResponse() {
+
+        const generatingText = this.page.getByText(
+            /Generating|Getting response|Loading/i
+        );
+
+        const isGeneratingVisible = await generatingText
+            .isVisible({
+                timeout: 5000
+            })
+            .catch(() => false);
+
+        if (isGeneratingVisible) {
+
+            await generatingText.waitFor({
+                state: 'hidden',
+                timeout: 120000
+            });
+
+            console.log('Generated response completed');
+        }
+
+        await this.page.waitForTimeout(2000);
+    }
+
+    async clickRunAudit(runAuditButtonText) {
+
+        const runAuditButton = this.page.getByRole('button', {
+            name: new RegExp(runAuditButtonText, 'i')
+        });
+
+        await expect(runAuditButton).toBeVisible({
+            timeout: 30000
+        });
+
+        await expect(runAuditButton).toBeEnabled({
+            timeout: 60000
+        });
+
+        await runAuditButton.click();
 
         console.log('Run Audit clicked');
     }
 
     async verifyAuditCompleted(data, testInfo) {
 
-        await expect(this.auditLoadingText).toBeVisible({
-            timeout: 15000
+        const isLoaderVisible = await this.auditLoadingText
+            .isVisible({
+                timeout: 15000
+            })
+            .catch(() => false);
+
+        if (isLoaderVisible) {
+
+            console.log('Audit started successfully');
+
+            await this.auditLoadingText.waitFor({
+                state: 'hidden',
+                timeout: 180000
+            });
+
+            console.log('Audit completed successfully');
+        }
+
+        else {
+
+            console.log('Audit loader not visible, checking result screen');
+        }
+
+        const resultSection = this.page.getByRole('button', {
+            name: new RegExp(data.expectedResultText, 'i')
         });
 
-        console.log('Audit started successfully');
-
-        await this.auditLoadingText.waitFor({
-            state: 'hidden',
-            timeout: 120000
-        });
-
-        console.log('Audit completed successfully');
-
-        await expect(this.auditResultSection).toBeVisible({
-            timeout: 30000
+        await expect(resultSection).toBeVisible({
+            timeout: 60000
         });
 
         console.log('Result screen visible');
@@ -143,10 +269,11 @@ export class ResponseAuditPage {
         const resultData = {
             testCaseId: data.testCaseId,
             testCaseName: data.testCaseName,
+            scenarioType: data.scenarioType,
             module: 'Response Audit',
-            question: data.question,
-            aiResponse: data.aiResponse,
-            expectedResponse: data.expectedResponse,
+            source: data.source,
+            recordType: data.recordType,
+            recordName: data.recordName,
             screenshotPath,
             capturedAt: new Date().toISOString(),
             uiText

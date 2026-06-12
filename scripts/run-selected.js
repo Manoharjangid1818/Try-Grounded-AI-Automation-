@@ -20,6 +20,11 @@ const grepPattern = testPlan.testIds.join('|');
 
 console.log(`Running selected test cases: ${grepPattern}`);
 
-execSync(`npx playwright test --grep "${grepPattern}"`, {
-    stdio: 'inherit'
-});
+execSync(
+    `set BASE_URL=https://grounded-topaz.vercel.app/dashboard && npx playwright test --grep "${grepPattern}" --config playwright.config.js`,
+    {
+        stdio: 'inherit'
+    }
+);
+
+
