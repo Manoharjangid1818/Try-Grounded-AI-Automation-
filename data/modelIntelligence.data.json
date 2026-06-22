@@ -1,0 +1,9 @@
+[
+    {
+        "testCaseId": "MI_001",
+        "testCaseName": "Verify Model Intelligence Opens Successfully",
+        "modelName": "Claude Opus 4.5",
+        "auditName": "Bulk Audit 1",
+        "runButtonText": "Run Comparison"
+    }
+]

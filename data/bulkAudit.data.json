@@ -1,0 +1,76 @@
+[
+  {
+    "testCaseId": "BA_001",
+    "scenarioType": "happyFlow",
+    "testCaseName": "Verify Bulk Audit with Manohar Jangid Contact",
+    "auditName": "Bulk Audit 1",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Manohar Jangid"
+  },
+  {
+    "testCaseId": "BA_002",
+    "scenarioType": "happyFlow",
+    "testCaseName": "Verify Bulk Audit with Brian Halligan Contact",
+    "auditName": "Bulk Audit 2",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Brian Halligan (Sample Contact)"
+  },
+  {
+    "testCaseId": "BA_003",
+    "scenarioType": "happyFlow",
+    "testCaseName": "Verify Bulk Audit with Maria Johnson Contact",
+    "auditName": "Bulk Audit 3",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Maria Johnson (Sample Contact)"
+  },
+  {
+    "testCaseId": "BA_004",
+    "scenarioType": "runButtonDisabledBeforeRows",
+    "testCaseName": "Verify Run button is disabled before rows loaded",
+    "auditName": "Bulk Audit Disabled Button Check",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Manohar Jangid"
+  },
+  {
+    "testCaseId": "BA_005",
+    "scenarioType": "emptyAuditNameValidation",
+    "testCaseName": "Verify empty audit name validation",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Manohar Jangid",
+    "expectedValidationText": "required"
+  },
+  {
+    "testCaseId": "BA_006",
+    "scenarioType": "resetButton",
+    "testCaseName": "Verify Reset button clears Bulk Audit form",
+    "auditName": "Bulk Audit Reset Check",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Manohar Jangid",
+    "resetButtonText": "Reset"
+  },
+  {
+    "testCaseId": "BA_007",
+    "scenarioType": "loadExample",
+    "testCaseName": "Verify Load Example works in Bulk Audit",
+    "loadExampleButtonText": "Load Example",
+    "expectedLoadedText": "rows loaded"
+  },
+  {
+    "testCaseId": "BA_008",
+    "scenarioType": "referenceDocument",
+    "testCaseName": "Verify upload or paste reference document option",
+    "auditName": "Bulk Audit 8",
+    "source": "HubSpot",
+    "recordType": "CONTACTS",
+    "contactName": "Manohar Jangid",
+    "referenceOptionText": "Upload or paste a reference document",
+    "referenceDocumentText": "KiwiQA is a software testing company providing QA and automation testing services."
+  }
+]
+

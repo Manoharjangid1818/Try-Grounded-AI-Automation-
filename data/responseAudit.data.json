@@ -1,0 +1,24 @@
+[
+    {
+        "testCaseId": "RA_001",
+        "scenarioType": "connectedSource",
+        "testCaseName": "Verify Response Audit with HubSpot Contact",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "recordName": "Manohar Jangid",
+        "getResponseButtonText": "Get response",
+        "runAuditButtonText": "Run audit",
+        "expectedResultText": "Score breakdown"
+    },
+    {
+        "testCaseId": "RA_002",
+        "scenarioType": "connectedSource",
+        "testCaseName": "Verify Response Audit with Zendesk Article",
+        "source": "Zendesk",
+        "recordType": "ARTICLES",
+        "recordName": "About us",
+        "getResponseButtonText": "Get response",
+        "runAuditButtonText": "Run audit",
+        "expectedResultText": "Score breakdown"
+    }
+]

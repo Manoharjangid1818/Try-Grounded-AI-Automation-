@@ -1,0 +1,6 @@
+{
+    "files": [
+        "tests/bulkAudit.spec.js",
+        "tests/responseAudit.spec.js"
+    ]
+}

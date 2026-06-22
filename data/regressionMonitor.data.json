@@ -1,0 +1,9 @@
+[
+    {
+        "testCaseId": "RM_001",
+        "testCaseName": "Verify Regression Monitor Works Successfully",
+        "scheduleFrequency": "daily",
+        "points": "5",
+        "runButtonText": "Run now"
+    }
+]

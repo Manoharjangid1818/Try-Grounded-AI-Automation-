@@ -1,0 +1,13 @@
+node_modules/
+
+.env
+
+auth/user.json
+
+playwright-report/
+test-results/
+
+results/
+results/history/
+
+.DS_Store
