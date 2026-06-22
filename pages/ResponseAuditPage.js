@@ -3,11 +3,17 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
+<<<<<<< HEAD
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
 export class ResponseAuditPage {
 
 
+=======
+
+export class ResponseAuditPage {
+
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
 
         this.page = page;
@@ -95,6 +101,7 @@ export class ResponseAuditPage {
         await this.clickRunAudit(data.runAuditButtonText);
     }
 
+<<<<<<< HEAD
     async clickFirstVisibleMatch(textValue) {
 
         // 1) exact text match (most strict)
@@ -135,13 +142,32 @@ export class ResponseAuditPage {
     async selectConnectedSource(sourceName) {
 
         await this.clickFirstVisibleMatch(sourceName);
+=======
+    async selectConnectedSource(sourceName) {
+
+        const sourceOption = this.page.getByText(
+            sourceName,
+            {
+                exact: true
+            }
+        );
+
+        await expect(sourceOption).toBeVisible({
+            timeout: 30000
+        });
+
+        await sourceOption.click();
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 
         console.log(`${sourceName} selected`);
     }
 
     async selectRecordType(recordType) {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
         const recordTypeButton = this.page.getByRole('button', {
             name: new RegExp(`^${recordType}`, 'i')
         });
@@ -157,6 +183,7 @@ export class ResponseAuditPage {
 
     async selectRecord(recordName) {
 
+<<<<<<< HEAD
         const record = this.page.getByText(recordName, { exact: true }).first();
 
         if (await record.isVisible({ timeout: 5000 }).catch(() => false)) {
@@ -171,6 +198,19 @@ export class ResponseAuditPage {
         });
 
         await contains.click({ force: true });
+=======
+        const record = this.page
+            .getByText(recordName, {
+                exact: true
+            })
+            .first();
+
+        await expect(record).toBeVisible({
+            timeout: 30000
+        });
+
+        await record.click();
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 
         console.log(`${recordName} selected`);
     }
@@ -321,6 +361,7 @@ export class ResponseAuditPage {
             contentType: 'application/json'
         });
 
+<<<<<<< HEAD
         // Persist result history + optional GR drift warning (informational by default)
         try {
             const currentScore = extractScore(uiText);
@@ -370,4 +411,8 @@ export class ResponseAuditPage {
         await this.page.waitForTimeout(3000);
     }
 
+=======
+        await this.page.waitForTimeout(3000);
+    }
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 }

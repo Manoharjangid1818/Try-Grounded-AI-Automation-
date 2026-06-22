@@ -3,12 +3,18 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
+<<<<<<< HEAD
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
 
 export class BulkAuditPage {
 
 
+=======
+
+export class BulkAuditPage {
+
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
 
         this.page = page;
@@ -246,6 +252,7 @@ export class BulkAuditPage {
 
     async verifyBulkAuditCompleted(data, testInfo) {
 
+<<<<<<< HEAD
         // Primary success condition: results screen.
         // The app's “running” banner text is not stable enough for an exact match,
         // so treat it as best-effort only.
@@ -272,6 +279,23 @@ export class BulkAuditPage {
 
         await expect(this.resultScreen).toBeVisible({
             timeout: 300000
+=======
+        await expect(this.bulkAuditRunning).toBeVisible({
+            timeout: 60000
+        });
+
+        console.log('Bulk audit execution started');
+
+        await this.bulkAuditRunning.waitFor({
+            state: 'hidden',
+            timeout: 300000
+        });
+
+        console.log('Execution completed');
+
+        await expect(this.resultScreen).toBeVisible({
+            timeout: 120000
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
         });
 
         console.log('Bulk audit completed successfully');
@@ -282,6 +306,7 @@ export class BulkAuditPage {
             'bulk-audit-result'
         );
 
+<<<<<<< HEAD
         // Persist result history + optional GR drift warning (informational by default)
         // Only run when a GR/grounding score can be extracted.
         try {
@@ -337,6 +362,11 @@ export class BulkAuditPage {
 
 
 
+=======
+        await this.page.waitForTimeout(3000);
+    }
+
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     async captureBulkAuditEvidence(data, testInfo, fileNamePrefix) {
 
         const screenshotPath = await captureFullPageScreenshot(

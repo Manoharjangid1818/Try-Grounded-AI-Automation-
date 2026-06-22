@@ -3,11 +3,17 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
+<<<<<<< HEAD
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
 export class CustomRulesPage {
 
 
+=======
+
+export class CustomRulesPage {
+
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
 
         this.page = page;
@@ -161,6 +167,7 @@ export class CustomRulesPage {
             contentType: 'application/json'
         });
 
+<<<<<<< HEAD
         // Persist result history + optional GR drift warning (informational by default)
         // Custom Rules may not have a GR score; only act when one is found.
         try {
@@ -211,4 +218,8 @@ export class CustomRulesPage {
         await this.page.waitForTimeout(3000);
     }
 
+=======
+        await this.page.waitForTimeout(3000);
+    }
+>>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 }
