@@ -28,14 +28,14 @@ export default defineConfig({
         [
             'json',
             {
-                outputFile: 'results/json-results/playwright-results.json'
+                outputFile: 'results/playwright-results.json'
             }
         ],
 
         [
             'junit',
             {
-                outputFile: 'results/json-results/junit-results.xml'
+                outputFile: 'results/junit-results.xml'
             }
         ]
     ],

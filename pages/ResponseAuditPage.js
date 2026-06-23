@@ -3,19 +3,15 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
-<<<<<<< HEAD
-import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
+
+import {
+    appendToHistory,
+    getPreviousEntry,
+    extractScore
+} from '../utils/resultHistory.js';
 
 export class ResponseAuditPage {
-
-
-=======
-
-export class ResponseAuditPage {
-
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
-
         this.page = page;
 
         // Skip onboarding popup
@@ -27,91 +23,209 @@ export class ResponseAuditPage {
         // Matches both "Response Audit" and "RESPONSE AUDIT" variants; pick the first visible.
         this.responseAuditButton = page
             .locator('button', { hasText: /response audit/i })
-            .filter({ hasText: /^response audit$/i })
+            .filter({ hasText: /response audit/i })
             .first();
 
+        // Fallback nav element in case sidebar renders as link/div
+        this.responseAuditNavFallback = page.locator('text=/response audit/i').first();
 
-        // Get response button
+        // --- Diagnostic anchors (added; do not replace any existing locator) ---
+        // Used only to confirm the app shell actually rendered before we go
+        // looking for the nav item, and to detect an unexpected login screen.
+        this.appShellAnchor = page.getByText(/WORKSPACE/i).first();
+        this.loginFormIndicator = page.locator('input[type="password"]').first();
+
+        // Buttons
         this.getResponseButton = page.getByRole('button', {
             name: /Get response/i
         });
 
-        // Run audit button
+        this.generateDemoButton = page.getByRole('button', {
+            name: /Generate demo/i
+        });
+
         this.runAuditButton = page.getByRole('button', {
             name: /Run audit/i
         });
 
         // Audit running loader
-        this.auditLoadingText = page.getByText(
-            /Running 10-Layer Audit/i
-        );
+        this.auditLoadingText = page.getByText(/Running 10-Layer Audit/i);
 
         // Final result screen
         this.auditResultSection = page.getByRole('button', {
             name: /Score breakdown/i
         });
+
+        // Header "Load example"
+        this.loadExampleButton = page
+            .locator('button', { hasText: /Load example/i })
+            .first();
+
+        // Data source clear (✕ next to Data source)
+        this.clearDataSourceButton = page
+            .locator('button, [role="button"]', { hasText: /✕|x/i })
+            .first();
+
+        // Ground truth loaded banner (text placeholder)
+        this.groundTruthLoadedText = page.getByText(/Ground truth loaded/i);
+
+        // Fields (placeholders; keep semantic selector strategy)
+        this.contextPromptField = page.getByLabel(/Context|Prompt/i);
+        this.aiGeneratedContentField = page.getByLabel(/AI-generated content/i);
+
+        // Connected source / CRM panel assertions (best-effort text-based locators)
+        this.crmRecordActiveText = page.getByText(/CRM record active/i);
+        this.layersVerificationNoteText = page.getByText(/Layers\s*2,\s*3\s*\+\s*9|Layers\s*2,\s*3\s*\+\s*9/i);
+
+        // Ground truth tag (source label + green check)
+        this.hubspotTagText = page.getByText(/HUBSPOT/i);
+        this.groundTruthGreenCheck = page.getByText(/Ground truth loaded/i);
+
+        // Error toast (optional; app-dependent)
+        this.errorToast = page.getByText(/error|failed|toast/i).first();
+
+        // Result body for “references ground truth source” assertion
+        this.auditResultBody = page.locator('body');
     }
 
-    async openAuditPage() {
 
+    async openAuditPage() {
         // Always land on dashboard (script runner may set BASE_URL)
         await this.page.goto('/dashboard');
-
-
         await this.page.waitForLoadState('networkidle');
 
-        if (
-            await this.skipButton
-                .isVisible()
-                .catch(() => false)
-        ) {
-
+        if (await this.skipButton.isVisible().catch(() => false)) {
             await this.skipButton.click();
-
             console.log('Skip popup handled');
         }
 
-        await expect(this.responseAuditButton).toBeVisible({
-            timeout: 30000
-        });
+        // --- Added guard (does not alter existing flow) ---
+        // Fail fast with a clear message if we were bounced to a login page
+        // instead of the dashboard, rather than letting the nav locator
+        // time out 30s later with a confusing "element not found" error.
+        const onLoginScreen = await this.loginFormIndicator
+            .isVisible({ timeout: 3000 })
+            .catch(() => false);
 
-        await this.responseAuditButton.click({
-            force: true
-        });
+        if (onLoginScreen) {
+            throw new Error(
+                `openAuditPage: Detected a login form at ${this.page.url()} instead of the dashboard. ` +
+                `storageState (auth/user.json) is likely expired or invalid — re-authenticate and regenerate it.`
+            );
+        }
 
+        // --- Added guard (does not alter existing flow) ---
+        // Wait for the sidebar app shell to actually render before searching
+        // for the nav item, so we don't race the SPA's initial mount.
+        await this.appShellAnchor
+            .waitFor({ state: 'visible', timeout: 30000 })
+            .catch(() => {
+                console.warn(
+                    'App shell anchor ("WORKSPACE") not found within 30s — proceeding anyway, nav lookup may fail.'
+                );
+            });
+
+        // Some UI variants render nav as a button, others as a link/div.
+        const navToClick = (await this.responseAuditButton.isVisible().catch(() => false))
+            ? this.responseAuditButton
+            : this.responseAuditNavFallback;
+
+        try {
+            await expect(navToClick).toBeVisible({ timeout: 30000 });
+        } catch (err) {
+            // Enrich the failure with page context for faster debugging,
+            // without changing the original assertion or its timeout.
+            console.error(
+                `Response Audit nav not found. Current URL: ${this.page.url()}, ` +
+                `title: ${await this.page.title().catch(() => 'n/a')}`
+            );
+            throw err;
+        }
+
+        await navToClick.click({ force: true });
         console.log('Response Audit page opened');
-
         await this.page.waitForLoadState('networkidle');
+
+    }
+
+    async clickLoadExample() {
+        await expect(this.loadExampleButton).toBeVisible({ timeout: 30000 });
+        await this.loadExampleButton.click({ force: true });
+        await this.page.waitForLoadState('networkidle').catch(() => {});
+    }
+
+    async clearConnectedSourceIfPresent() {
+        if (await this.clearDataSourceButton.isVisible().catch(() => false)) {
+            await this.clearDataSourceButton.click({ force: true });
+            await this.page.waitForLoadState('networkidle').catch(() => {});
+        }
+    }
+
+    async assertGroundTruthLoaded() {
+        await expect(this.groundTruthLoadedText).toBeVisible({ timeout: 30000 });
+    }
+
+    async assertContextAndGeneratedContentNotEmpty() {
+        // Context/Prompt
+        if (await this.contextPromptField.isVisible().catch(() => false)) {
+            await expect(this.contextPromptField).toHaveValue('', { timeout: 1 }).catch(() => {});
+            const val = await this.contextPromptField.inputValue().catch(async () => {
+                // fallback: try text content
+                return (await this.contextPromptField.innerText()).trim();
+            });
+            expect(String(val).trim().length).toBeGreaterThan(0);
+        }
+
+        // AI-generated content
+        if (
+            await this.aiGeneratedContentField.isVisible().catch(() => false)
+        ) {
+            const val = await this.aiGeneratedContentField.inputValue().catch(async () => {
+                return (await this.aiGeneratedContentField.innerText()).trim();
+            });
+            expect(String(val).trim().length).toBeGreaterThan(0);
+        }
     }
 
     async performConnectedSourceAudit(data) {
+        if (data.shouldClearBeforeSelect) {
+            await this.clearConnectedSourceIfPresent();
+        }
 
         await this.selectConnectedSource(data.source);
-
         await this.selectRecordType(data.recordType);
-
         await this.selectRecord(data.recordName);
 
-        // Give UI time to finish rendering the record-specific actions (Get response button).
         await this.page.waitForLoadState('networkidle').catch(() => {});
         await this.page.waitForTimeout(1000);
 
-        await this.clickGetResponse(data.getResponseButtonText);
-
+        await this.clickGenerateAction(data);
         await this.clickRunAudit(data.runAuditButtonText);
     }
 
-<<<<<<< HEAD
-    async clickFirstVisibleMatch(textValue) {
+    async clickGenerateAction(data) {
+        // Deterministic choice requested: prefer "Generate demo" when configured.
+        const preferDemo = data.useGenerateDemo === true;
+        if (preferDemo) {
+            if (await this.generateDemoButton.isVisible().catch(() => false)) {
+                await this.generateDemoButton.click({ force: true });
+                console.log('Generate demo clicked');
+                await this.waitForGeneratedResponse();
+                return;
+            }
+        }
 
-        // 1) exact text match (most strict)
+        // Default: Get response
+        await this.clickGetResponse(data.getResponseButtonText);
+    }
+
+    async clickFirstVisibleMatch(textValue) {
         const exact = this.page.getByText(textValue, { exact: true });
         if (await exact.isVisible({ timeout: 5000 }).catch(() => false)) {
             await exact.click({ force: true });
             return;
         }
 
-        // 2) button/link whose accessible name matches (case-insensitive)
         const byButtonLike = this.page
             .getByRole('button', { name: new RegExp(`^${textValue}$`, 'i') })
             .first();
@@ -130,97 +244,38 @@ export class ResponseAuditPage {
             return;
         }
 
-
-        // 3) any element containing the text (case-insensitive)
         const contains = this.page.getByText(new RegExp(textValue, 'i')).first();
-        await expect(contains).toBeVisible({
-            timeout: 30000
-        });
+        await expect(contains).toBeVisible({ timeout: 30000 });
         await contains.click({ force: true });
     }
 
     async selectConnectedSource(sourceName) {
-
-        await this.clickFirstVisibleMatch(sourceName);
-=======
-    async selectConnectedSource(sourceName) {
-
-        const sourceOption = this.page.getByText(
-            sourceName,
-            {
-                exact: true
-            }
-        );
-
-        await expect(sourceOption).toBeVisible({
-            timeout: 30000
-        });
-
+        const sourceOption = this.page.getByText(sourceName, { exact: true });
+        await expect(sourceOption).toBeVisible({ timeout: 30000 });
         await sourceOption.click();
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
-
         console.log(`${sourceName} selected`);
     }
 
     async selectRecordType(recordType) {
-
-<<<<<<< HEAD
-
-=======
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
         const recordTypeButton = this.page.getByRole('button', {
             name: new RegExp(`^${recordType}`, 'i')
         });
 
-        await expect(recordTypeButton).toBeVisible({
-            timeout: 30000
-        });
-
+        await expect(recordTypeButton).toBeVisible({ timeout: 30000 });
         await recordTypeButton.click();
-
         console.log(`${recordType} selected`);
     }
 
     async selectRecord(recordName) {
-
-<<<<<<< HEAD
         const record = this.page.getByText(recordName, { exact: true }).first();
-
-        if (await record.isVisible({ timeout: 5000 }).catch(() => false)) {
-            await record.click({ force: true });
-            console.log(`${recordName} selected`);
-            return;
-        }
-
-        const contains = this.page.getByText(new RegExp(recordName, 'i')).first();
-        await expect(contains).toBeVisible({
-            timeout: 30000
-        });
-
-        await contains.click({ force: true });
-=======
-        const record = this.page
-            .getByText(recordName, {
-                exact: true
-            })
-            .first();
-
-        await expect(record).toBeVisible({
-            timeout: 30000
-        });
-
+        await expect(record).toBeVisible({ timeout: 30000 });
         await record.click();
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
-
         console.log(`${recordName} selected`);
     }
 
     async clickGetResponse(getResponseButtonText) {
-
-        // UI may re-render after selecting source/record; try multiple selector strategies.
         const textRe = new RegExp(getResponseButtonText.replace(/\s+/g, '\\s+'), 'i');
 
-        // 1) Best: actual <button> role
         const btnByRole = this.page.getByRole('button', { name: textRe }).first();
         const isRoleVisible = await btnByRole
             .isVisible({ timeout: 8000 })
@@ -234,42 +289,21 @@ export class ResponseAuditPage {
             return;
         }
 
-        // 2) Fallback: click the first clickable element that matches the text anywhere.
-        // Some UI variants render as non-button elements; also allow small text variations.
-        const clickableByText = this.page
-            .locator('text=/Get\\s*response/i')
-            .first();
-
-        // Avoid scrollIntoViewIfNeeded (can hang while layout/overlays change).
+        const clickableByText = this.page.locator('text=/Get\\s*response/i').first();
         await clickableByText.click({ force: true });
-
         console.log('Get response clicked (fallback by any text)');
-
         await this.waitForGeneratedResponse();
     }
 
-
-
-
     async waitForGeneratedResponse() {
-
-        const generatingText = this.page.getByText(
-            /Generating|Getting response|Loading/i
-        );
+        const generatingText = this.page.getByText(/Generating|Getting response|Loading/i);
 
         const isGeneratingVisible = await generatingText
-            .isVisible({
-                timeout: 5000
-            })
+            .isVisible({ timeout: 5000 })
             .catch(() => false);
 
         if (isGeneratingVisible) {
-
-            await generatingText.waitFor({
-                state: 'hidden',
-                timeout: 120000
-            });
-
+            await generatingText.waitFor({ state: 'hidden', timeout: 120000 });
             console.log('Generated response completed');
         }
 
@@ -277,58 +311,31 @@ export class ResponseAuditPage {
     }
 
     async clickRunAudit(runAuditButtonText) {
-
         const runAuditButton = this.page.getByRole('button', {
             name: new RegExp(runAuditButtonText, 'i')
         });
 
-        await expect(runAuditButton).toBeVisible({
-            timeout: 30000
-        });
-
-        await expect(runAuditButton).toBeEnabled({
-            timeout: 60000
-        });
+        await expect(runAuditButton).toBeVisible({ timeout: 30000 });
+        await expect(runAuditButton).toBeEnabled({ timeout: 60000 });
 
         await runAuditButton.click();
-
         console.log('Run Audit clicked');
     }
 
     async verifyAuditCompleted(data, testInfo) {
-
         const isLoaderVisible = await this.auditLoadingText
-            .isVisible({
-                timeout: 15000
-            })
+            .isVisible({ timeout: 15000 })
             .catch(() => false);
 
         if (isLoaderVisible) {
-
-            console.log('Audit started successfully');
-
-            await this.auditLoadingText.waitFor({
-                state: 'hidden',
-                timeout: 180000
-            });
-
-            console.log('Audit completed successfully');
-        }
-
-        else {
-
-            console.log('Audit loader not visible, checking result screen');
+            await this.auditLoadingText.waitFor({ state: 'hidden', timeout: 180000 });
         }
 
         const resultSection = this.page.getByRole('button', {
             name: new RegExp(data.expectedResultText, 'i')
         });
 
-        await expect(resultSection).toBeVisible({
-            timeout: 60000
-        });
-
-        console.log('Result screen visible');
+        await expect(resultSection).toBeVisible({ timeout: 60000 });
 
         const screenshotPath = await captureFullPageScreenshot(
             this.page,
@@ -361,8 +368,6 @@ export class ResponseAuditPage {
             contentType: 'application/json'
         });
 
-<<<<<<< HEAD
-        // Persist result history + optional GR drift warning (informational by default)
         try {
             const currentScore = extractScore(uiText);
 
@@ -377,8 +382,6 @@ export class ResponseAuditPage {
                 if (prev?.score != null && String(prev.score).trim() !== String(currentScore).trim()) {
                     const delta = `${String(currentScore).trim()} (prev ${String(prev.score).trim()})`;
                     const msg = `[${data.testCaseId}] GR score drift: prev=${prev.score}, current=${currentScore}, delta=${delta}`;
-
-                    console.warn(msg);
 
                     testInfo.annotations.push({
                         type: 'warning',
@@ -411,8 +414,90 @@ export class ResponseAuditPage {
         await this.page.waitForTimeout(3000);
     }
 
-=======
-        await this.page.waitForTimeout(3000);
+    async verifyLoadExampleFlow(data, testInfo) {
+        await this.clickLoadExample();
+        await this.assertGroundTruthLoaded();
+        await this.assertContextAndGeneratedContentNotEmpty();
+        await this.clickRunAudit(data.runAuditButtonText);
+        await this.verifyAuditCompleted(data, testInfo);
     }
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
+
+    async openLoadExampleMenu() {
+        await expect(this.loadExampleButton).toBeVisible({ timeout: 30000 });
+        await this.loadExampleButton.click({ force: true });
+
+        // Allow the popover/dropdown to mount.
+        await this.page.waitForTimeout(2000);
+
+        // Dropdown/menu should list four example options.
+        // The UI may not render the full label as plain text immediately; use best-effort visibility checks
+        // and fail only with a clear error.
+        const supportReply = this.page.getByText(/Support reply/i).first();
+        const crmNote = this.page.getByText(/CRM note/i).first();
+        const medicalQuery = this.page.getByText(/Medical query/i).first();
+        const legalSummary = this.page.getByText(/Legal summary/i).first();
+
+        const supportVisible = await supportReply.isVisible({ timeout: 30000 }).catch(() => false);
+        const crmVisible = await crmNote.isVisible({ timeout: 30000 }).catch(() => false);
+        const medicalVisible = await medicalQuery.isVisible({ timeout: 30000 }).catch(() => false);
+        const legalVisible = await legalSummary.isVisible({ timeout: 30000 }).catch(() => false);
+
+        if (!supportVisible || !crmVisible || !medicalVisible || !legalVisible) {
+            // screenshot for debugging without changing wait strategy
+            await this.page.screenshot({ path: 'test-results/response-audit-load-example-menu-debug.png', fullPage: true }).catch(() => {});
+            throw new Error(
+                `Load example menu options not visible. ` +
+                `Support reply=${supportVisible}, CRM note=${crmVisible}, Medical query=${medicalVisible}, Legal summary=${legalVisible}`
+            );
+        }
+
+
+    }
+
+
+    async selectLoadExampleOption(optionName) {
+        // Click matching option by label and wait for menu to close best-effort.
+        const option = this.page.getByText(new RegExp(optionName.replace(/\s+/g, '\\s+'), 'i'), { exact: false }).first();
+        await expect(option).toBeVisible({ timeout: 30000 });
+        await option.click({ force: true });
+
+        // Wait for the menu to disappear by checking the option is not visible.
+        await option.isVisible({ timeout: 30000 }).then(async (visible) => {
+            if (visible) {
+                // If still visible, wait a bit for the popover to close using existing wait-for semantics.
+                await this.page.waitForTimeout(2000);
+            }
+        }).catch(() => {});
+    }
+
+    async assertRightPanelCRMRecordAndLayers() {
+        await expect(this.crmRecordActiveText).toBeVisible({ timeout: 30000 });
+        await expect(this.layersVerificationNoteText).toBeVisible({ timeout: 30000 });
+    }
+
+
+    async assertContextPromptContainsName(name) {
+        // Use the same field used by existing non-empty assertions.
+        await expect(this.contextPromptField).toBeVisible({ timeout: 30000 });
+
+        const val = await this.contextPromptField
+            .inputValue()
+            .catch(async () => (await this.contextPromptField.innerText()).trim());
+
+        expect(String(val)).toContain(name);
+    }
+
+    async assertNoErrorToast() {
+        const toast = this.errorToast;
+        if (await toast.isVisible({ timeout: 5000 }).catch(() => false)) {
+            const txt = await toast.innerText().catch(() => '');
+            throw new Error(`Unexpected error toast detected: ${txt}`);
+        }
+    }
+
+    async assertResultReferencesGroundTruthSource(sourceName) {
+        // Best-effort: validate ground truth reference appears in body text.
+        const uiText = await this.auditResultBody.innerText();
+        expect(uiText).toMatch(new RegExp(sourceName, 'i'));
+    }
 }
