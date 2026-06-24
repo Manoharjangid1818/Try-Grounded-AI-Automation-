@@ -1,0 +1,1 @@
+KiwiQA is a software testing company providing manual testing, automation testing, API testing, performance testing, security testing, mobile app testing, web application testing, and QA consulting services. KiwiQA supports Playwright automation using JavaScript and TypeScript frameworks.

@@ -4,10 +4,18 @@ import { ModelIntelligencePage } from '../pages/ModelIntelligencePage.js';
 
 import { readJsonFile } from '../utils/dataReader.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 const modelIntelligenceData = readJsonFile('./data/modelIntelligence.data.json');
 
 test.use({
     storageState: 'auth/user.json'
+});
+
+registerResultCapture(test, {
+    module: 'Model Intelligence',
+    getResultData: (testCaseId) =>
+        modelIntelligenceData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Model Intelligence Tests @model-intelligence @regression', () => {
@@ -18,7 +26,7 @@ test.describe('Model Intelligence Tests @model-intelligence @regression', () => 
 
             const modelIntelligencePage = new ModelIntelligencePage(page);
 
-            await page.goto('/');
+            await page.goto('/dashboard');
 
             await modelIntelligencePage.openModelIntelligence();
 

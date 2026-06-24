@@ -3,17 +3,9 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
-<<<<<<< HEAD
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
 export class RegressionMonitorPage {
-
-
-=======
-
-export class RegressionMonitorPage {
-
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
 
         this.page = page;
@@ -208,7 +200,6 @@ export class RegressionMonitorPage {
             path: resultPath,
             contentType: 'application/json'
         });
-<<<<<<< HEAD
 
         // Persist result history + optional GR drift warning (informational by default)
         try {
@@ -256,8 +247,4 @@ export class RegressionMonitorPage {
             console.warn('Score history/drift tracking skipped:', e?.message || e);
         }
     }
-
-=======
-    }
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 }

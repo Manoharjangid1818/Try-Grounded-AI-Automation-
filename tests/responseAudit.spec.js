@@ -4,10 +4,18 @@ import { ResponseAuditPage } from '../pages/ResponseAuditPage.js';
 
 import { readJsonFile } from '../utils/dataReader.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 const responseAuditData = readJsonFile('./data/responseAudit.data.json');
 
 test.use({
     storageState: 'auth/user.json'
+});
+
+registerResultCapture(test, {
+    module: 'Response Audit',
+    getResultData: (testCaseId) =>
+        responseAuditData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Response Audit Tests @response-audit @smoke', () => {
@@ -69,7 +77,11 @@ test('RA_007 - TC-02 HubSpot contact audit (data-driven)', async ({ page }, test
 
     const auditPage = new ResponseAuditPage(page);
 
-    const contacts = ['Maria Johnson', 'ContactB', 'ContactC'];
+    const contacts = [
+        'Maria Johnson (Sample Contact)',
+        'Brian Halligan (Sample Contact)',
+        'Manohar Jangid'
+    ];
 
     for (const contactName of contacts) {
 

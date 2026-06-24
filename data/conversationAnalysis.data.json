@@ -1,0 +1,57 @@
+[
+    {
+        "testCaseId": "CA_001",
+        "scenarioType": "pageOpen",
+        "testCaseName": "Verify Conversation Analysis page opens successfully"
+    },
+    {
+        "testCaseId": "CA_002",
+        "scenarioType": "conversationName",
+        "testCaseName": "Verify user can enter conversation name",
+        "conversationName": "Conversation1"
+    },
+    {
+        "testCaseId": "CA_003",
+        "scenarioType": "fileUpload",
+        "testCaseName": "Verify reference document file upload works",
+        "referenceFilePath": "data/reference-documents/KiwiQA Reference Document.txt"
+    },
+    {
+        "testCaseId": "CA_004",
+        "scenarioType": "pasteTranscript",
+        "testCaseName": "Verify user can paste conversation transcript",
+        "conversationName": "Conversation Transcript Test",
+        "transcript": "User: What services does KiwiQA provide?\nAssistant: KiwiQA provides manual testing, automation testing, API testing, performance testing, security testing, mobile app testing, web application testing, and QA consulting services.\n\nUser: Does KiwiQA support Playwright automation?\nAssistant: Yes, KiwiQA supports Playwright automation using JavaScript and TypeScript frameworks.\n\nUser: What kind of reports can KiwiQA provide?\nAssistant: KiwiQA can provide test plans, test scenarios, test cases, defect reports, automation execution reports, screenshots, videos, and CI/CD reports.\n\nUser: How can I contact KiwiQA?\nAssistant: You can contact KiwiQA through email, website contact forms, or scheduled meetings."
+    },
+    {
+        "testCaseId": "CA_005",
+        "scenarioType": "fullAnalysisWithFileUpload",
+        "testCaseName": "Verify complete Conversation Analysis flow with file upload and transcript",
+        "conversationName": "Conversation1",
+        "referenceFilePath": "data/reference-documents/KiwiQA Reference Document.txt",
+        "transcript": "User: What services does KiwiQA provide?\nAssistant: KiwiQA provides manual testing, automation testing, API testing, performance testing, security testing, mobile app testing, web application testing, and QA consulting services.\n\nUser: Does KiwiQA support Playwright automation?\nAssistant: Yes, KiwiQA supports Playwright automation using JavaScript and TypeScript frameworks.\n\nUser: What kind of reports can KiwiQA provide?\nAssistant: KiwiQA can provide test plans, test scenarios, test cases, defect reports, automation execution reports, screenshots, videos, and CI/CD reports.\n\nUser: How can I contact KiwiQA?\nAssistant: You can contact KiwiQA through email, website contact forms, or scheduled meetings.",
+        "expectedResultText": "What gets checked"
+    },
+    {
+        "testCaseId": "CA_006",
+        "scenarioType": "loadExample",
+        "testCaseName": "Verify Load Example button works"
+    },
+    {
+        "testCaseId": "CA_007",
+        "scenarioType": "emptyTranscriptValidation",
+        "testCaseName": "Verify empty transcript validation",
+        "conversationName": "Empty Transcript Validation",
+        "expectedValidationText": "required"
+    },
+    {
+        "testCaseId": "CA_008",
+        "scenarioType": "supportedFormats",
+        "testCaseName": "Verify supported file formats text is visible"
+    },
+    {
+        "testCaseId": "CA_009",
+        "scenarioType": "summaryCheckbox",
+        "testCaseName": "Verify optional summary checkbox can be selected"
+    }
+]

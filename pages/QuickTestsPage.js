@@ -3,17 +3,9 @@ import { expect } from '@playwright/test';
 import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 
 import { saveJsonResult } from '../utils/resultWriter.js';
-<<<<<<< HEAD
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
 export class QuickTestsPage {
-
-
-=======
-
-export class QuickTestsPage {
-
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
     constructor(page) {
 
         this.page = page;
@@ -121,7 +113,6 @@ export class QuickTestsPage {
             contentType: 'application/json'
         });
 
-<<<<<<< HEAD
         // Persist result history + optional GR drift warning (informational by default)
         try {
             const currentScore = extractScore(uiText);
@@ -170,9 +161,4 @@ export class QuickTestsPage {
 
         await this.page.waitForTimeout(3000);
     }
-
-=======
-        await this.page.waitForTimeout(3000);
-    }
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b
 }

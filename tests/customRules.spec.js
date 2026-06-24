@@ -4,10 +4,18 @@ import { CustomRulesPage } from '../pages/CustomRulesPage.js';
 
 import { readJsonFile } from '../utils/dataReader.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 const customRulesData = readJsonFile('./data/customRules.data.json');
 
 test.use({
     storageState: 'auth/user.json'
+});
+
+registerResultCapture(test, {
+    module: 'Custom Rules',
+    getResultData: (testCaseId) =>
+        customRulesData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Custom Rules Tests @custom-rules @regression', () => {
@@ -18,7 +26,7 @@ test.describe('Custom Rules Tests @custom-rules @regression', () => {
 
             const customRulesPage = new CustomRulesPage(page);
 
-            await page.goto('/');
+            await page.goto('/dashboard');
 
             await customRulesPage.openCustomRulesPage();
 

@@ -4,10 +4,18 @@ import { RegressionMonitorPage } from '../pages/RegressionMonitorPage.js';
 
 import { readJsonFile } from '../utils/dataReader.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 const regressionMonitorData = readJsonFile('./data/regressionMonitor.data.json');
 
 test.use({
     storageState: 'auth/user.json'
+});
+
+registerResultCapture(test, {
+    module: 'Regression Monitor',
+    getResultData: (testCaseId) =>
+        regressionMonitorData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Regression Monitor Tests @regression-monitor @regression', () => {
@@ -18,7 +26,7 @@ test.describe('Regression Monitor Tests @regression-monitor @regression', () => 
 
             const regressionMonitorPage = new RegressionMonitorPage(page);
 
-            await page.goto('/');
+            await page.goto('/dashboard');
 
             await regressionMonitorPage.openTestHistory();
 

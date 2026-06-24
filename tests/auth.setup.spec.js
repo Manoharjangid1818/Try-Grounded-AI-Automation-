@@ -4,7 +4,14 @@ import dotenv from 'dotenv';
 
 import { LoginPage } from '../pages/LoginPage.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 dotenv.config();
+
+registerResultCapture(test, {
+    module: 'Authentication',
+    fallbackTestCaseId: 'AUTH_SETUP'
+});
 
 test('Authentication Setup', async ({ page }) => {
 

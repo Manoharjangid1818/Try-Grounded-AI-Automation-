@@ -4,10 +4,18 @@ import { QuickTestsPage } from '../pages/QuickTestsPage.js';
 
 import { readJsonFile } from '../utils/dataReader.js';
 
+import { registerResultCapture } from '../utils/testResultCapture.js';
+
 const quickTestsData = readJsonFile('./data/quickTests.data.json');
 
 test.use({
     storageState: 'auth/user.json'
+});
+
+registerResultCapture(test, {
+    module: 'Quick Tests',
+    getResultData: (testCaseId) =>
+        quickTestsData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Quick Tests @quick-tests @smoke', () => {
@@ -18,7 +26,7 @@ test.describe('Quick Tests @quick-tests @smoke', () => {
 
             const quickTestsPage = new QuickTestsPage(page);
 
-            await page.goto('/');
+            await page.goto('/dashboard');
 
             await quickTestsPage.openQuickTestsPage();
 

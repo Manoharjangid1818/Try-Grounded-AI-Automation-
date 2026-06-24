@@ -16,6 +16,7 @@
         "test:quick": "npx playwright test tests/quickTests.spec.js",
         "test:monitor": "npx playwright test tests/regressionMonitor.spec.js",
         "test:response": "npx playwright test tests/responseAudit.spec.js",
+        "test:conversation": "npx playwright test tests/conversationAnalysis.spec.js",
 
         "test:selected": "node scripts/run-selected.js",
         "test:files": "node scripts/run-files.js",
