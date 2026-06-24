@@ -47,7 +47,8 @@ export default defineConfig({
             'https://grounded-topaz.vercel.app/dashboard',
 
         headless:
-            process.env.HEADLESS === 'true',
+            process.env.HEADLESS === 'true' || process.env.CI === 'true',
+
 
         viewport: {
             width: 1440,
