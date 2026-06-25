@@ -1,18 +1,14 @@
 node_modules/
 
 .env
-
+.env.*
+!.env.example
 auth/user.json
 
 playwright-report/
 test-results/
-
+junit-results.xml/
 results/
-<<<<<<< HEAD
 results/history/
 
 .DS_Store
-=======
-
-.DS_Store
->>>>>>> c5cd56de17917c3e5e5c98554fcc7f4e9f2e2e4b

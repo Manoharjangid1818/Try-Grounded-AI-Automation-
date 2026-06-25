@@ -41,6 +41,17 @@ function resultScore(uiText) {
     return overallScore?.[1]?.trim() || null;
 }
 
+/**
+ * Captures normalized evidence after a Playwright test run.
+ *
+ * @param {object} options - Capture options.
+ * @param {import('@playwright/test').Page} options.page - Playwright page instance.
+ * @param {import('@playwright/test').TestInfo} options.testInfo - Current test metadata.
+ * @param {string} options.module - Module name reported in the result.
+ * @param {Function} [options.getResultData] - Optional metadata lookup by test case ID.
+ * @param {string} [options.fallbackTestCaseId] - ID used when the title has no test ID.
+ * @returns {Promise<string>} Path to the consolidated result file.
+ */
 export async function captureTestRunResult({
     page,
     testInfo,
@@ -50,27 +61,21 @@ export async function captureTestRunResult({
 }) {
     const capturedAt = new Date().toISOString();
     const timestamp = fileSafeTimestamp(capturedAt);
-    const testCaseId = testCaseIdFromTitle(
-        testInfo.title,
-        fallbackTestCaseId
-    );
+    const testCaseId = testCaseIdFromTitle(testInfo.title, fallbackTestCaseId);
     const metadata = (await getResultData?.(testCaseId, testInfo)) || {};
     const screenshotName = `${testCaseId}-test-result-${timestamp}`;
 
     let screenshotPath = null;
     try {
-        screenshotPath = await captureFullPageScreenshot(
-            page,
-            testInfo,
-            screenshotName
-        );
+        screenshotPath = await captureFullPageScreenshot(page, testInfo, screenshotName);
     } catch (error) {
-        console.warn(
-            `[${testCaseId}] Result screenshot unavailable: ${error.message || error}`
-        );
+        console.warn(`[${testCaseId}] Result screenshot unavailable: ${error.message || error}`);
     }
 
-    const uiText = await page.locator('body').innerText().catch(() => null);
+    const uiText = await page
+        .locator('body')
+        .innerText()
+        .catch(() => null);
     const score = resultScore(uiText);
 
     const {
@@ -103,10 +108,7 @@ export async function captureTestRunResult({
         error: failureDetails(testInfo.error)
     };
 
-    const resultPath = saveJsonResult(
-        `${testCaseId}-test-result-${timestamp}.json`,
-        resultData
-    );
+    const resultPath = saveJsonResult(`${testCaseId}-test-result-${timestamp}.json`, resultData);
 
     await testInfo.attach(`${testCaseId} Test Result JSON`, {
         path: resultPath,
@@ -116,6 +118,12 @@ export async function captureTestRunResult({
     return resultPath;
 }
 
+/**
+ * Registers an afterEach hook that records screenshots and structured results.
+ *
+ * @param {import('@playwright/test').TestType} test - Playwright test object.
+ * @param {object} options - Capture options forwarded to captureTestRunResult.
+ */
 export function registerResultCapture(test, options) {
     test.afterEach(async ({ page }, testInfo) => {
         try {
@@ -129,7 +137,7 @@ export function registerResultCapture(test, options) {
             // original pass/fail outcome.
             console.warn(
                 `[${options.fallbackTestCaseId || options.module}] Result capture failed: ` +
-                `${error.message || error}`
+                    `${error.message || error}`
             );
         }
     });

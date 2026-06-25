@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+node -e "const { execSync } = require('node:child_process'); const blocked = execSync('git diff --cached --name-only --diff-filter=ACMRT', { encoding: 'utf8' }).split(/\r?\n/).filter((file) => file === '.env' || file === 'auth/user.json'); if (blocked.length) { console.error('Blocked commit: ' + blocked.join(', ') + ' must never be committed.'); process.exit(1); }"

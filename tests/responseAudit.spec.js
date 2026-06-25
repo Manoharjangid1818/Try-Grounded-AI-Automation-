@@ -14,16 +14,14 @@ test.use({
 
 registerResultCapture(test, {
     module: 'Response Audit',
-    getResultData: (testCaseId) =>
-        responseAuditData.find((data) => data.testCaseId === testCaseId)
+    getResultData: (testCaseId) => responseAuditData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Response Audit Tests @response-audit @smoke', () => {
-
     for (const data of responseAuditData) {
-
-        test(`${data.testCaseId} - ${data.testCaseName} @response-audit @smoke`, async ({ page }, testInfo) => {
-
+        test(`${data.testCaseId} - ${data.testCaseName} @response-audit @smoke`, async ({
+            page
+        }, testInfo) => {
             const auditPage = new ResponseAuditPage(page);
 
             await auditPage.openAuditPage();
@@ -33,21 +31,18 @@ test.describe('Response Audit Tests @response-audit @smoke', () => {
 
                 // Field assertions are handled inside page object only when configured via data.
                 await auditPage.verifyAuditCompleted(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'loadExample') {
+            } else if (data.scenarioType === 'loadExample') {
                 await auditPage.verifyLoadExampleFlow(data, testInfo);
-            }
-
-            else {
+            } else {
                 throw new Error(`Invalid scenarioType found: ${data.scenarioType}`);
             }
         });
     }
 });
 
-test('RA_006 - TC-01 Load example & run audit (explicit assertions)', async ({ page }, testInfo) => {
-
+test('RA_006 - TC-01 Load example & run audit (explicit assertions)', async ({
+    page
+}, testInfo) => {
     const auditPage = new ResponseAuditPage(page);
 
     await auditPage.openAuditPage();
@@ -74,7 +69,6 @@ test('RA_006 - TC-01 Load example & run audit (explicit assertions)', async ({ p
 });
 
 test('RA_007 - TC-02 HubSpot contact audit (data-driven)', async ({ page }, testInfo) => {
-
     const auditPage = new ResponseAuditPage(page);
 
     const contacts = [
@@ -84,7 +78,6 @@ test('RA_007 - TC-02 HubSpot contact audit (data-driven)', async ({ page }, test
     ];
 
     for (const contactName of contacts) {
-
         await auditPage.openAuditPage();
 
         // Step 1: Clear if data source already selected
@@ -134,18 +127,15 @@ test('RA_007 - TC-02 HubSpot contact audit (data-driven)', async ({ page }, test
 
         await auditPage.assertNoErrorToast();
         await auditPage.assertResultReferencesGroundTruthSource('HubSpot');
-
     }
 });
 
 test('RA_008 - Load example dropdown options (data-driven)', async ({ page }, testInfo) => {
-
     const auditPage = new ResponseAuditPage(page);
 
     const options = ['Support reply', 'CRM note', 'Medical query', 'Legal summary'];
 
     for (const optionName of options) {
-
         await auditPage.openAuditPage();
         await auditPage.clearConnectedSourceIfPresent();
 
@@ -172,6 +162,5 @@ test('RA_008 - Load example dropdown options (data-driven)', async ({ page }, te
         );
 
         await auditPage.assertNoErrorToast();
-
     }
 });

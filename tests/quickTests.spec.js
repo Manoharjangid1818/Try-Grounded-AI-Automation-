@@ -14,16 +14,14 @@ test.use({
 
 registerResultCapture(test, {
     module: 'Quick Tests',
-    getResultData: (testCaseId) =>
-        quickTestsData.find((data) => data.testCaseId === testCaseId)
+    getResultData: (testCaseId) => quickTestsData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Quick Tests @quick-tests @smoke', () => {
-
     for (const data of quickTestsData) {
-
-        test(`${data.testCaseId} - ${data.testCaseName} @quick-tests @smoke`, async ({ page }, testInfo) => {
-
+        test(`${data.testCaseId} - ${data.testCaseName} @quick-tests @smoke`, async ({
+            page
+        }, testInfo) => {
             const quickTestsPage = new QuickTestsPage(page);
 
             await page.goto('/dashboard');

@@ -19,11 +19,10 @@ registerResultCapture(test, {
 });
 
 test.describe('Regression Monitor Tests @regression-monitor @regression', () => {
-
     for (const data of regressionMonitorData) {
-
-        test(`${data.testCaseId} - ${data.testCaseName} @regression-monitor @regression`, async ({ page }, testInfo) => {
-
+        test(`${data.testCaseId} - ${data.testCaseName} @regression-monitor @regression`, async ({
+            page
+        }, testInfo) => {
             const regressionMonitorPage = new RegressionMonitorPage(page);
 
             await page.goto('/dashboard');

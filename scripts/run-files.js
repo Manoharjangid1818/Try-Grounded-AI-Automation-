@@ -8,9 +8,7 @@ if (!fs.existsSync(filePlanPath)) {
     throw new Error(`Selected files plan not found: ${filePlanPath}`);
 }
 
-const filePlan = JSON.parse(
-    fs.readFileSync(filePlanPath, 'utf-8')
-);
+const filePlan = JSON.parse(fs.readFileSync(filePlanPath, 'utf-8'));
 
 if (!filePlan.files || filePlan.files.length === 0) {
     throw new Error('No files found inside selected-files.json');

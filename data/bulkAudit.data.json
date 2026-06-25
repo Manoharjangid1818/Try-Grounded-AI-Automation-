@@ -1,163 +1,163 @@
 [
-  {
-    "testCaseId": "BA_001",
-    "scenarioType": "happyFlow",
-    "testCaseName": "Verify Bulk Audit with Manohar Jangid Contact",
-    "auditName": "Bulk Audit 1",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Manohar Jangid"
-  },
-  {
-    "testCaseId": "BA_002",
-    "scenarioType": "happyFlow",
-    "testCaseName": "Verify Bulk Audit with Brian Halligan Contact",
-    "auditName": "Bulk Audit 2",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Brian Halligan (Sample Contact)"
-  },
-  {
-    "testCaseId": "BA_003",
-    "scenarioType": "happyFlow",
-    "testCaseName": "Verify Bulk Audit with Maria Johnson Contact",
-    "auditName": "Bulk Audit 3",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Maria Johnson (Sample Contact)"
-  },
-  {
-    "testCaseId": "BA_004",
-    "scenarioType": "runButtonDisabledBeforeRows",
-    "testCaseName": "Verify Run button is disabled before rows loaded",
-    "auditName": "Bulk Audit Disabled Button Check",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Manohar Jangid"
-  },
-  {
-    "testCaseId": "BA_005",
-    "scenarioType": "emptyAuditNameValidation",
-    "testCaseName": "Verify empty audit name validation",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Manohar Jangid",
-    "expectedValidationText": "required"
-  },
-  {
-    "testCaseId": "BA_006",
-    "scenarioType": "resetButton",
-    "testCaseName": "Verify Reset button clears Bulk Audit form",
-    "auditName": "Bulk Audit Reset Check",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Manohar Jangid",
-    "resetButtonText": "Reset"
-  },
-  {
-    "testCaseId": "BA_007",
-    "scenarioType": "loadExample",
-    "testCaseName": "Verify Load Example works in Bulk Audit",
-    "loadExampleButtonText": "Load Example",
-    "expectedLoadedText": "rows loaded"
-  },
-  {
-    "testCaseId": "BA_008",
-    "scenarioType": "referenceDocument",
-    "testCaseName": "Verify upload or paste reference document option",
-    "auditName": "Bulk Audit 8",
-    "source": "HubSpot",
-    "recordType": "CONTACTS",
-    "contactName": "Manohar Jangid",
-    "referenceOptionText": "Upload or paste a reference document",
-    "referenceDocumentText": "KiwiQA is a software testing company providing QA and automation testing services."
-  },
-  {
-    "testCaseId": "BA_009",
-    "scenarioType": "csvUploadDefaultTab",
-    "testCaseName": "Verify CSV Upload tab is selected by default",
-    "expectedTabText": "CSV Upload"
-  },
-  {
-    "testCaseId": "BA_010",
-    "scenarioType": "liveAgentTab",
-    "testCaseName": "Verify Live Agent tab opens successfully",
-    "tabName": "Live Agent"
-  },
-  {
-    "testCaseId": "BA_011",
-    "scenarioType": "testRunName",
-    "testCaseName": "Verify user can enter Test Run Name",
-    "auditName": "Bulk Audit Test Run Name Check"
-  },
-  {
-    "testCaseId": "BA_012",
-    "scenarioType": "downloadSampleCsv",
-    "testCaseName": "Verify Download Sample CSV works",
-    "downloadButtonText": "Download sample CSV"
-  },
-  {
-    "testCaseId": "BA_013",
-    "scenarioType": "formatGuide",
-    "testCaseName": "Verify Format Guide opens",
-    "formatGuideText": "Format guide"
-  },
-  {
-    "testCaseId": "BA_014",
-    "scenarioType": "csvFileUpload",
-    "testCaseName": "Verify valid CSV file upload works",
-    "auditName": "Bulk Audit CSV Upload",
-    "csvFilePath": "data/bulk-audit-files/valid-bulk-audit.csv"
-  },
-  {
-    "testCaseId": "BA_015",
-    "scenarioType": "invalidFileUpload",
-    "testCaseName": "Verify invalid file type validation",
-    "invalidFilePath": "data/bulk-audit-files/invalid-file.png",
-    "expectedValidationText": "invalid|unsupported|only csv|only json"
-  },
-  {
-    "testCaseId": "BA_016",
-    "scenarioType": "fileSizeValidation",
-    "testCaseName": "Verify file size validation for CSV file more than 2 MB",
-    "largeFilePath": "data/bulk-audit-files/large-file.csv",
-    "expectedValidationText": "2 MB|max|file size|too large"
-  },
-  {
-    "testCaseId": "BA_018",
-    "scenarioType": "expandJsonGroundTruth",
-    "testCaseName": "Verify Paste JSON ground truth option expands",
-    "groundTruthOptionText": "Paste JSON ground truth"
-  },
-  {
-    "testCaseId": "BA_019",
-    "scenarioType": "validJsonGroundTruth",
-    "testCaseName": "Verify valid JSON ground truth can be pasted",
-    "groundTruthJson": "{ \"company\": \"KiwiQA\", \"service\": \"QA automation testing\" }"
-  },
-  {
-    "testCaseId": "BA_021",
-    "scenarioType": "activeLayersPanel",
-    "testCaseName": "Verify Active Layers panel is visible",
-    "expectedPanelText": "ACTIVE LAYERS"
-  },
-  {
-    "testCaseId": "BA_022",
-    "scenarioType": "statusBeforeUpload",
-    "testCaseName": "Verify status card before file upload",
-    "expectedStatusText": "Upload a file to begin"
-  },
-  {
-    "testCaseId": "BA_024",
-    "scenarioType": "referenceDocumentFileUpload",
-    "testCaseName": "Verify Reference Document file upload works",
-    "referenceFilePath": "data/reference-documents/KiwiQA Reference Document.txt"
-  },
-  {
-    "testCaseId": "BA_025",
-    "scenarioType": "referenceDocumentSizeValidation",
-    "testCaseName": "Verify Reference Document size validation over 5 MB",
-    "largeReferenceFilePath": "data/reference-documents/large-reference-doc.txt",
-    "expectedValidationText": "5MB|max 5MB|file size|too large"
-  }
+    {
+        "testCaseId": "BA_001",
+        "scenarioType": "happyFlow",
+        "testCaseName": "Verify Bulk Audit with Manohar Jangid Contact",
+        "auditName": "Bulk Audit 1",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Manohar Jangid"
+    },
+    {
+        "testCaseId": "BA_002",
+        "scenarioType": "happyFlow",
+        "testCaseName": "Verify Bulk Audit with Brian Halligan Contact",
+        "auditName": "Bulk Audit 2",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Brian Halligan (Sample Contact)"
+    },
+    {
+        "testCaseId": "BA_003",
+        "scenarioType": "happyFlow",
+        "testCaseName": "Verify Bulk Audit with Maria Johnson Contact",
+        "auditName": "Bulk Audit 3",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Maria Johnson (Sample Contact)"
+    },
+    {
+        "testCaseId": "BA_004",
+        "scenarioType": "runButtonDisabledBeforeRows",
+        "testCaseName": "Verify Run button is disabled before rows loaded",
+        "auditName": "Bulk Audit Disabled Button Check",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Manohar Jangid"
+    },
+    {
+        "testCaseId": "BA_005",
+        "scenarioType": "emptyAuditNameValidation",
+        "testCaseName": "Verify empty audit name validation",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Manohar Jangid",
+        "expectedValidationText": "required"
+    },
+    {
+        "testCaseId": "BA_006",
+        "scenarioType": "resetButton",
+        "testCaseName": "Verify Reset button clears Bulk Audit form",
+        "auditName": "Bulk Audit Reset Check",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Manohar Jangid",
+        "resetButtonText": "Reset"
+    },
+    {
+        "testCaseId": "BA_007",
+        "scenarioType": "loadExample",
+        "testCaseName": "Verify Load Example works in Bulk Audit",
+        "loadExampleButtonText": "Load Example",
+        "expectedLoadedText": "rows loaded"
+    },
+    {
+        "testCaseId": "BA_008",
+        "scenarioType": "referenceDocument",
+        "testCaseName": "Verify upload or paste reference document option",
+        "auditName": "Bulk Audit 8",
+        "source": "HubSpot",
+        "recordType": "CONTACTS",
+        "contactName": "Manohar Jangid",
+        "referenceOptionText": "Upload or paste a reference document",
+        "referenceDocumentText": "KiwiQA is a software testing company providing QA and automation testing services."
+    },
+    {
+        "testCaseId": "BA_009",
+        "scenarioType": "csvUploadDefaultTab",
+        "testCaseName": "Verify CSV Upload tab is selected by default",
+        "expectedTabText": "CSV Upload"
+    },
+    {
+        "testCaseId": "BA_010",
+        "scenarioType": "liveAgentTab",
+        "testCaseName": "Verify Live Agent tab opens successfully",
+        "tabName": "Live Agent"
+    },
+    {
+        "testCaseId": "BA_011",
+        "scenarioType": "testRunName",
+        "testCaseName": "Verify user can enter Test Run Name",
+        "auditName": "Bulk Audit Test Run Name Check"
+    },
+    {
+        "testCaseId": "BA_012",
+        "scenarioType": "downloadSampleCsv",
+        "testCaseName": "Verify Download Sample CSV works",
+        "downloadButtonText": "Download sample CSV"
+    },
+    {
+        "testCaseId": "BA_013",
+        "scenarioType": "formatGuide",
+        "testCaseName": "Verify Format Guide opens",
+        "formatGuideText": "Format guide"
+    },
+    {
+        "testCaseId": "BA_014",
+        "scenarioType": "csvFileUpload",
+        "testCaseName": "Verify valid CSV file upload works",
+        "auditName": "Bulk Audit CSV Upload",
+        "csvFilePath": "data/bulk-audit-files/valid-bulk-audit.csv"
+    },
+    {
+        "testCaseId": "BA_015",
+        "scenarioType": "invalidFileUpload",
+        "testCaseName": "Verify invalid file type validation",
+        "invalidFilePath": "data/bulk-audit-files/invalid-file.png",
+        "expectedValidationText": "invalid|unsupported|only csv|only json"
+    },
+    {
+        "testCaseId": "BA_016",
+        "scenarioType": "fileSizeValidation",
+        "testCaseName": "Verify file size validation for CSV file more than 2 MB",
+        "largeFilePath": "data/bulk-audit-files/large-file.csv",
+        "expectedValidationText": "2 MB|max|file size|too large"
+    },
+    {
+        "testCaseId": "BA_018",
+        "scenarioType": "expandJsonGroundTruth",
+        "testCaseName": "Verify Paste JSON ground truth option expands",
+        "groundTruthOptionText": "Paste JSON ground truth"
+    },
+    {
+        "testCaseId": "BA_019",
+        "scenarioType": "validJsonGroundTruth",
+        "testCaseName": "Verify valid JSON ground truth can be pasted",
+        "groundTruthJson": "{ \"company\": \"KiwiQA\", \"service\": \"QA automation testing\" }"
+    },
+    {
+        "testCaseId": "BA_021",
+        "scenarioType": "activeLayersPanel",
+        "testCaseName": "Verify Active Layers panel is visible",
+        "expectedPanelText": "ACTIVE LAYERS"
+    },
+    {
+        "testCaseId": "BA_022",
+        "scenarioType": "statusBeforeUpload",
+        "testCaseName": "Verify status card before file upload",
+        "expectedStatusText": "Upload a file to begin"
+    },
+    {
+        "testCaseId": "BA_024",
+        "scenarioType": "referenceDocumentFileUpload",
+        "testCaseName": "Verify Reference Document file upload works",
+        "referenceFilePath": "data/reference-documents/KiwiQA Reference Document.txt"
+    },
+    {
+        "testCaseId": "BA_025",
+        "scenarioType": "referenceDocumentSizeValidation",
+        "testCaseName": "Verify Reference Document size validation over 5 MB",
+        "largeReferenceFilePath": "data/reference-documents/large-reference-doc.txt",
+        "expectedValidationText": "5MB|max 5MB|file size|too large"
+    }
 ]

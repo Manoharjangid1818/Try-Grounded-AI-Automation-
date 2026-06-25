@@ -8,9 +8,7 @@ if (!fs.existsSync(testPlanPath)) {
     throw new Error(`Selected test plan file not found: ${testPlanPath}`);
 }
 
-const testPlan = JSON.parse(
-    fs.readFileSync(testPlanPath, 'utf-8')
-);
+const testPlan = JSON.parse(fs.readFileSync(testPlanPath, 'utf-8'));
 
 if (!testPlan.testIds || testPlan.testIds.length === 0) {
     throw new Error('No test IDs found inside selected-tests.json');
@@ -26,5 +24,3 @@ execSync(
         stdio: 'inherit'
     }
 );
-
-

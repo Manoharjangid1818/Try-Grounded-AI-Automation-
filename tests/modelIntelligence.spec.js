@@ -19,11 +19,10 @@ registerResultCapture(test, {
 });
 
 test.describe('Model Intelligence Tests @model-intelligence @regression', () => {
-
     for (const data of modelIntelligenceData) {
-
-        test(`${data.testCaseId} - ${data.testCaseName} @model-intelligence @regression`, async ({ page }, testInfo) => {
-
+        test(`${data.testCaseId} - ${data.testCaseName} @model-intelligence @regression`, async ({
+            page
+        }, testInfo) => {
             const modelIntelligencePage = new ModelIntelligencePage(page);
 
             await page.goto('/dashboard');

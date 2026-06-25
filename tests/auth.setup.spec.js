@@ -14,17 +14,13 @@ registerResultCapture(test, {
 });
 
 test('Authentication Setup', async ({ page }) => {
-
     test.setTimeout(120000);
 
     const loginPage = new LoginPage(page);
 
     await loginPage.gotoLoginPage();
 
-    await loginPage.login(
-        process.env.EMAIL,
-        process.env.PASSWORD
-    );
+    await loginPage.login(process.env.EMAIL, process.env.PASSWORD);
 
     console.log('Enter OTP manually');
 
@@ -37,5 +33,4 @@ test('Authentication Setup', async ({ page }) => {
     });
 
     console.log('Session Saved Successfully');
-
 });

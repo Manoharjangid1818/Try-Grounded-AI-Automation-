@@ -2,9 +2,7 @@ import fs from 'fs';
 
 import path from 'path';
 
-const RESULTS_FILE = path.resolve(
-    './results/ui-results/all-ui-results.json'
-);
+const RESULTS_FILE = path.resolve('./results/ui-results/all-ui-results.json');
 
 function readResults() {
     if (!fs.existsSync(RESULTS_FILE)) {
@@ -28,6 +26,13 @@ function ensureResultsDirectory() {
     }
 }
 
+/**
+ * Appends structured UI evidence to the consolidated result file.
+ *
+ * @param {string} fileName - Logical capture name for the result.
+ * @param {Record<string, unknown>} resultData - Module-specific result data.
+ * @returns {string} Path to the consolidated result file.
+ */
 export function saveJsonResult(fileName, resultData) {
     ensureResultsDirectory();
 
@@ -43,10 +48,7 @@ export function saveJsonResult(fileName, resultData) {
 
     results.push(runResult);
 
-    fs.writeFileSync(
-        RESULTS_FILE,
-        JSON.stringify(results, null, 2)
-    );
+    fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2));
 
     return RESULTS_FILE;
 }

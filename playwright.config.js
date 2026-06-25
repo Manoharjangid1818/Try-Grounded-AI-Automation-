@@ -5,8 +5,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig({
-
     testDir: './tests',
+
+    outputDir: 'test-results',
 
     timeout: 300000,
 
@@ -41,14 +42,9 @@ export default defineConfig({
     ],
 
     use: {
+        baseURL: process.env.BASE_URL || 'https://grounded-topaz.vercel.app/dashboard',
 
-        baseURL:
-            process.env.BASE_URL ||
-            'https://grounded-topaz.vercel.app/dashboard',
-
-        headless:
-            process.env.HEADLESS === 'true' || process.env.CI === 'true',
-
+        headless: process.env.HEADLESS === 'true' || process.env.CI === 'true',
 
         viewport: {
             width: 1440,
@@ -62,9 +58,7 @@ export default defineConfig({
         trace: 'on-first-retry'
     },
 
-    retries:
-        process.env.CI ? 1 : 0,
+    retries: process.env.CI ? 1 : 0,
 
-    workers:
-        process.env.CI ? 2 : 1
+    workers: process.env.CI ? 2 : 1
 });

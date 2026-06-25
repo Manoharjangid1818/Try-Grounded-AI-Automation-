@@ -1,5 +1,4 @@
 export const testConfig = {
-  baseURL: process.env.BASE_URL || 'https://grounded-topaz.vercel.app',
-  dashboardPath: '/dashboard',
+    baseURL: process.env.BASE_URL || 'https://grounded-topaz.vercel.app',
+    dashboardPath: '/dashboard'
 };
-

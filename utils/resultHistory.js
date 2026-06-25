@@ -10,28 +10,22 @@ function readLegacyHistory() {
     }
 
     const history = [];
-    const legacyFiles = fs.readdirSync(HISTORY_DIR)
+    const legacyFiles = fs
+        .readdirSync(HISTORY_DIR)
         .filter((fileName) => fileName.endsWith('.json'))
         .filter((fileName) => fileName !== 'history.json')
         .sort();
 
     for (const fileName of legacyFiles) {
         try {
-            const parsed = JSON.parse(
-                fs.readFileSync(path.join(HISTORY_DIR, fileName), 'utf-8')
-            );
+            const parsed = JSON.parse(fs.readFileSync(path.join(HISTORY_DIR, fileName), 'utf-8'));
 
             if (!Array.isArray(parsed)) continue;
 
             const defaultTestCaseId = path.basename(fileName, '.json');
 
             for (const entry of parsed) {
-                const {
-                    runId: ignoredRunId,
-                    timestamp,
-                    testCaseId,
-                    ...details
-                } = entry;
+                const { runId: ignoredRunId, timestamp, testCaseId, ...details } = entry;
 
                 history.push({
                     runId: history.length,
@@ -58,10 +52,7 @@ function ensureHistoryDir() {
         const legacyHistory = readLegacyHistory();
 
         if (legacyHistory.length) {
-            fs.writeFileSync(
-                HISTORY_FILE,
-                JSON.stringify(legacyHistory, null, 2)
-            );
+            fs.writeFileSync(HISTORY_FILE, JSON.stringify(legacyHistory, null, 2));
         }
     }
 }
@@ -80,6 +71,13 @@ function readHistory() {
     }
 }
 
+/**
+ * Extracts a GR or grounding score from page text.
+ *
+ * @param {string} pageText - Text captured from the application UI.
+ * @param {RegExp} [pattern] - Optional custom score pattern with score in group 1.
+ * @returns {string|null} The matched score text, or null when absent.
+ */
 export function extractScore(pageText, pattern) {
     if (!pageText) return null;
 
@@ -91,6 +89,13 @@ export function extractScore(pageText, pattern) {
     return raw;
 }
 
+/**
+ * Appends a test result summary to the consolidated score-history file.
+ *
+ * @param {string} testCaseId - Stable test case ID.
+ * @param {Record<string, unknown>} entry - Result details to persist.
+ * @returns {Record<string, unknown>} The history entry that was written.
+ */
 export function appendToHistory(testCaseId, entry) {
     ensureHistoryDir();
 
@@ -109,15 +114,18 @@ export function appendToHistory(testCaseId, entry) {
     return next;
 }
 
+/**
+ * Returns the previous history entry for a test case, if one exists.
+ *
+ * @param {string} testCaseId - Stable test case ID.
+ * @returns {Record<string, unknown>|null} Previous run entry or null.
+ */
 export function getPreviousEntry(testCaseId) {
     ensureHistoryDir();
 
-    const testCaseHistory = readHistory().filter(
-        (entry) => entry.testCaseId === testCaseId
-    );
+    const testCaseHistory = readHistory().filter((entry) => entry.testCaseId === testCaseId);
 
     if (testCaseHistory.length < 2) return null;
 
     return testCaseHistory[testCaseHistory.length - 2];
 }
-

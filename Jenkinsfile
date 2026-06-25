@@ -42,7 +42,7 @@ pipeline {
     stage('Auth storageState (auth/user.json)') {
       steps {
         // Strategy A (recommended): provide auth/user.json from Jenkins secret/artifact.
-        // If the file already exists in repo, it will be used.
+        // If the file already exists in the Jenkins workspace, it will be used.
         // Otherwise you must copy it from a Jenkins artifact/secret.
 
         // Example placeholder: if you have a Jenkins file credential containing auth/user.json,
@@ -73,11 +73,10 @@ pipeline {
     always {
       archiveArtifacts artifacts: [
         'playwright-report/**',
-        'results/junit-results.xml/**',
+        'results/junit-results.xml',
         'results/playwright-results.json',
         'results/**/html-report/**',
-        'test-results/**',
-        'auth/**'
+        'test-results/**'
       ], allowEmptyArchive: true
     }
 

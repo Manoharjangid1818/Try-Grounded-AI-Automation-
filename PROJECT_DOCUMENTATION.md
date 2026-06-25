@@ -35,42 +35,42 @@ The goal of this framework is to test important **Grounded AI features** such as
 
 ## 3. Technology Used
 
-| Item | Usage |
-| --- | --- |
-| **JavaScript** | Test code language |
-| **Playwright** | Browser automation and test runner |
-| **`@playwright/test`** | Playwright test framework |
-| **`dotenv`** | Reads values from `.env` file |
-| **Page Object Model** | Keeps UI actions inside page classes |
-| **JSON test data** | Stores test case details outside the spec files |
-| **Jenkins** | CI pipeline support |
+| Item                   | Usage                                           |
+| ---------------------- | ----------------------------------------------- |
+| **JavaScript**         | Test code language                              |
+| **Playwright**         | Browser automation and test runner              |
+| **`@playwright/test`** | Playwright test framework                       |
+| **`dotenv`**           | Reads values from `.env` file                   |
+| **Page Object Model**  | Keeps UI actions inside page classes            |
+| **JSON test data**     | Stores test case details outside the spec files |
+| **Jenkins**            | CI pipeline support                             |
 
 ## 4. Important Project Folders
 
-| Path | Meaning |
-| --- | --- |
-| **`tests/`** | Playwright spec files. Each file contains tests for one module. |
-| **`pages/`** | Page Object files. These files contain reusable UI actions. |
-| **`data/`** | Test data files in JSON format. |
-| **`utils/`** | Common helper files for reading data, screenshots, results, and history. |
-| **`config/`** | Small config helper files. |
-| **`scripts/`** | Node scripts for running selected tests or selected files. |
-| **`test-plans/`** | JSON files used by selected test execution scripts. |
-| **`auth/`** | Stores the logged-in browser session in `auth/user.json`. |
-| **`results/`** | Stores JSON, JUnit, and UI result output after test execution. |
-| **`playwright-report/`** | Stores the Playwright HTML report. |
-| **`test-results/`** | Stores Playwright artifacts like screenshots, traces, and videos. |
+| Path                     | Meaning                                                                  |
+| ------------------------ | ------------------------------------------------------------------------ |
+| **`tests/`**             | Playwright spec files. Each file contains tests for one module.          |
+| **`pages/`**             | Page Object files. These files contain reusable UI actions.              |
+| **`data/`**              | Test data files in JSON format.                                          |
+| **`utils/`**             | Common helper files for reading data, screenshots, results, and history. |
+| **`config/`**            | Small config helper files.                                               |
+| **`scripts/`**           | Node scripts for running selected tests or selected files.               |
+| **`test-plans/`**        | JSON files used by selected test execution scripts.                      |
+| **`auth/`**              | Stores the logged-in browser session in `auth/user.json`.                |
+| **`results/`**           | Stores JSON, JUnit, and UI result output after test execution.           |
+| **`playwright-report/`** | Stores the Playwright HTML report.                                       |
+| **`test-results/`**      | Stores Playwright artifacts like screenshots, traces, and videos.        |
 
 ## 5. Important Root Files
 
-| File | Meaning |
-| --- | --- |
-| **`package.json`** | NPM scripts and project dependencies. |
-| **`playwright.config.js`** | Main Playwright configuration. |
-| **`RunCommands.md`** | Quick command reference for running tests. |
-| **`RunJenkins.md`** | Jenkins running guide. |
-| **`Jenkinsfile`** | Jenkins pipeline definition. |
-| **`PROJECT_DOCUMENTATION.md`** | This project guide. |
+| File                           | Meaning                                    |
+| ------------------------------ | ------------------------------------------ |
+| **`package.json`**             | NPM scripts and project dependencies.      |
+| **`playwright.config.js`**     | Main Playwright configuration.             |
+| **`RunCommands.md`**           | Quick command reference for running tests. |
+| **`RunJenkins.md`**            | Jenkins running guide.                     |
+| **`Jenkinsfile`**              | Jenkins pipeline definition.               |
+| **`PROJECT_DOCUMENTATION.md`** | This project guide.                        |
 
 ## 6. Setup Steps
 
@@ -183,16 +183,16 @@ The framework uses **Page Object Model**.
 
 ## 9. Current Test Modules
 
-| Module | Spec File | Data File | Page Object | NPM Command |
-| --- | --- | --- | --- | --- |
-| **Authentication** | `tests/auth.setup.spec.js` | `.env` | `pages/LoginPage.js` | **`npm run auth`** |
-| **Response Audit** | `tests/responseAudit.spec.js` | `data/responseAudit.data.json` | `pages/ResponseAuditPage.js` | **`npm run test:response`** |
-| **Bulk Audit** | `tests/bulkAudit.spec.js` | `data/bulkAudit.data.json` | `pages/BulkAuditPage.js` | **`npm run test:bulk`** |
+| Module                    | Spec File                            | Data File                             | Page Object                         | NPM Command                     |
+| ------------------------- | ------------------------------------ | ------------------------------------- | ----------------------------------- | ------------------------------- |
+| **Authentication**        | `tests/auth.setup.spec.js`           | `.env`                                | `pages/LoginPage.js`                | **`npm run auth`**              |
+| **Response Audit**        | `tests/responseAudit.spec.js`        | `data/responseAudit.data.json`        | `pages/ResponseAuditPage.js`        | **`npm run test:response`**     |
+| **Bulk Audit**            | `tests/bulkAudit.spec.js`            | `data/bulkAudit.data.json`            | `pages/BulkAuditPage.js`            | **`npm run test:bulk`**         |
 | **Conversation Analysis** | `tests/conversationAnalysis.spec.js` | `data/conversationAnalysis.data.json` | `pages/ConversationAnalysisPage.js` | **`npm run test:conversation`** |
-| **Custom Rules** | `tests/customRules.spec.js` | `data/customRules.data.json` | `pages/CustomRulesPage.js` | **`npm run test:custom`** |
-| **Model Intelligence** | `tests/modelIntelligence.spec.js` | `data/modelIntelligence.data.json` | `pages/ModelIntelligencePage.js` | **`npm run test:model`** |
-| **Regression Monitor** | `tests/regressionMonitor.spec.js` | `data/regressionMonitor.data.json` | `pages/RegressionMonitorPage.js` | **`npm run test:monitor`** |
-| **Quick Tests** | `tests/quickTests.spec.js` | `data/quickTests.data.json` | `pages/QuickTestsPage.js` | **`npm run test:quick`** |
+| **Custom Rules**          | `tests/customRules.spec.js`          | `data/customRules.data.json`          | `pages/CustomRulesPage.js`          | **`npm run test:custom`**       |
+| **Model Intelligence**    | `tests/modelIntelligence.spec.js`    | `data/modelIntelligence.data.json`    | `pages/ModelIntelligencePage.js`    | **`npm run test:model`**        |
+| **Regression Monitor**    | `tests/regressionMonitor.spec.js`    | `data/regressionMonitor.data.json`    | `pages/RegressionMonitorPage.js`    | **`npm run test:monitor`**      |
+| **Quick Tests**           | `tests/quickTests.spec.js`           | `data/quickTests.data.json`           | `pages/QuickTestsPage.js`           | **`npm run test:quick`**        |
 
 **Note:**
 
@@ -202,43 +202,43 @@ The framework uses **Page Object Model**.
 
 ### Response Audit
 
-| ID | What It Checks |
-| --- | --- |
-| **`RA_001`** | Load example and run audit. |
-| **`RA_002`** | HubSpot contact audit for Maria Johnson. |
-| **`RA_003`** | HubSpot contact audit for Brian Halligan. |
-| **`RA_004`** | HubSpot contact audit for Manohar Jangid. |
-| **`RA_005`** | Response Audit with Zendesk article. |
+| ID           | What It Checks                                           |
+| ------------ | -------------------------------------------------------- |
+| **`RA_001`** | Load example and run audit.                              |
+| **`RA_002`** | HubSpot contact audit for Maria Johnson.                 |
+| **`RA_003`** | HubSpot contact audit for Brian Halligan.                |
+| **`RA_004`** | HubSpot contact audit for Manohar Jangid.                |
+| **`RA_005`** | Response Audit with Zendesk article.                     |
 | **`RA_006`** | Load example and run audit with extra direct assertions. |
 | **`RA_007`** | Data-driven HubSpot contact audit for multiple contacts. |
-| **`RA_008`** | Load example dropdown options. |
+| **`RA_008`** | Load example dropdown options.                           |
 
 ### Bulk Audit
 
-| ID | What It Checks |
-| --- | --- |
-| **`BA_001`** | Bulk Audit with Manohar Jangid contact. |
-| **`BA_002`** | Bulk Audit with Brian Halligan contact. |
-| **`BA_003`** | Bulk Audit with Maria Johnson contact. |
+| ID           | What It Checks                                 |
+| ------------ | ---------------------------------------------- |
+| **`BA_001`** | Bulk Audit with Manohar Jangid contact.        |
+| **`BA_002`** | Bulk Audit with Brian Halligan contact.        |
+| **`BA_003`** | Bulk Audit with Maria Johnson contact.         |
 | **`BA_004`** | Run button is disabled before rows are loaded. |
-| **`BA_005`** | Empty audit name validation. |
-| **`BA_006`** | Reset button clears the Bulk Audit form. |
-| **`BA_007`** | Load Example works in Bulk Audit. |
-| **`BA_008`** | Upload or paste reference document option. |
-| **`BA_009`** | CSV Upload tab is selected by default. |
-| **`BA_010`** | Live Agent tab opens successfully. |
-| **`BA_011`** | User can enter Test Run Name. |
-| **`BA_012`** | Download Sample CSV works. |
-| **`BA_013`** | Format Guide opens. |
-| **`BA_014`** | Valid CSV file upload works. |
-| **`BA_015`** | Invalid file type validation. |
-| **`BA_016`** | CSV file size validation for file over 2 MB. |
-| **`BA_018`** | Paste JSON ground truth option expands. |
-| **`BA_019`** | Valid JSON ground truth can be pasted. |
-| **`BA_021`** | Active Layers panel is visible. |
-| **`BA_022`** | Status card before file upload. |
-| **`BA_024`** | Reference document file upload works. |
-| **`BA_025`** | Reference document size validation over 5 MB. |
+| **`BA_005`** | Empty audit name validation.                   |
+| **`BA_006`** | Reset button clears the Bulk Audit form.       |
+| **`BA_007`** | Load Example works in Bulk Audit.              |
+| **`BA_008`** | Upload or paste reference document option.     |
+| **`BA_009`** | CSV Upload tab is selected by default.         |
+| **`BA_010`** | Live Agent tab opens successfully.             |
+| **`BA_011`** | User can enter Test Run Name.                  |
+| **`BA_012`** | Download Sample CSV works.                     |
+| **`BA_013`** | Format Guide opens.                            |
+| **`BA_014`** | Valid CSV file upload works.                   |
+| **`BA_015`** | Invalid file type validation.                  |
+| **`BA_016`** | CSV file size validation for file over 2 MB.   |
+| **`BA_018`** | Paste JSON ground truth option expands.        |
+| **`BA_019`** | Valid JSON ground truth can be pasted.         |
+| **`BA_021`** | Active Layers panel is visible.                |
+| **`BA_022`** | Status card before file upload.                |
+| **`BA_024`** | Reference document file upload works.          |
+| **`BA_025`** | Reference document size validation over 5 MB.  |
 
 **Note:**
 
@@ -246,47 +246,47 @@ The framework uses **Page Object Model**.
 
 ### Conversation Analysis
 
-| ID | What It Checks |
-| --- | --- |
-| **`CA_001`** | Conversation Analysis page opens successfully. |
-| **`CA_002`** | User can enter conversation name. |
-| **`CA_003`** | Reference document file upload works. |
-| **`CA_004`** | User can paste conversation transcript. |
+| ID           | What It Checks                                          |
+| ------------ | ------------------------------------------------------- |
+| **`CA_001`** | Conversation Analysis page opens successfully.          |
+| **`CA_002`** | User can enter conversation name.                       |
+| **`CA_003`** | Reference document file upload works.                   |
+| **`CA_004`** | User can paste conversation transcript.                 |
 | **`CA_005`** | Complete analysis flow with file upload and transcript. |
-| **`CA_006`** | Load Example button works. |
-| **`CA_007`** | Empty transcript validation. |
-| **`CA_008`** | Supported file formats text is visible. |
-| **`CA_009`** | Optional summary checkbox can be selected. |
+| **`CA_006`** | Load Example button works.                              |
+| **`CA_007`** | Empty transcript validation.                            |
+| **`CA_008`** | Supported file formats text is visible.                 |
+| **`CA_009`** | Optional summary checkbox can be selected.              |
 
 ### Other Modules
 
-| ID | Module | What It Checks |
-| --- | --- | --- |
-| **`CR_001`** | **Custom Rules** | Custom rule creation and analytics. |
+| ID           | Module                 | What It Checks                                             |
+| ------------ | ---------------------- | ---------------------------------------------------------- |
+| **`CR_001`** | **Custom Rules**       | Custom rule creation and analytics.                        |
 | **`MI_001`** | **Model Intelligence** | Model Intelligence opens and comparison button is visible. |
-| **`RM_001`** | **Regression Monitor** | Regression Monitor schedule and run flow. |
+| **`RM_001`** | **Regression Monitor** | Regression Monitor schedule and run flow.                  |
 
 ## 11. NPM Commands
 
-| Command | Meaning |
-| --- | --- |
-| **`npm run auth`** | Create or update `auth/user.json`. |
-| **`npm test`** | Run all Playwright tests. |
-| **`npm run test:ui`** | Open Playwright UI mode. |
-| **`npm run test:list`** | List all discovered tests. |
-| **`npm run test:headed`** | Run tests with browser visible. |
-| **`npm run test:smoke`** | Run tests tagged `@smoke`. |
-| **`npm run test:regression`** | Run tests tagged `@regression`. |
-| **`npm run test:bulk`** | Run Bulk Audit tests. |
-| **`npm run test:custom`** | Run Custom Rules tests. |
-| **`npm run test:model`** | Run Model Intelligence tests. |
-| **`npm run test:quick`** | Run Quick Tests. |
-| **`npm run test:monitor`** | Run Regression Monitor tests. |
-| **`npm run test:response`** | Run Response Audit tests. |
-| **`npm run test:conversation`** | Run Conversation Analysis tests. |
-| **`npm run test:selected`** | Run test IDs from `test-plans/selected-tests.json`. |
-| **`npm run test:files`** | Run files from `test-plans/selected-files.json`. |
-| **`npm run report`** | Open the Playwright HTML report. |
+| Command                         | Meaning                                             |
+| ------------------------------- | --------------------------------------------------- |
+| **`npm run auth`**              | Create or update `auth/user.json`.                  |
+| **`npm test`**                  | Run all Playwright tests.                           |
+| **`npm run test:ui`**           | Open Playwright UI mode.                            |
+| **`npm run test:list`**         | List all discovered tests.                          |
+| **`npm run test:headed`**       | Run tests with browser visible.                     |
+| **`npm run test:smoke`**        | Run tests tagged `@smoke`.                          |
+| **`npm run test:regression`**   | Run tests tagged `@regression`.                     |
+| **`npm run test:bulk`**         | Run Bulk Audit tests.                               |
+| **`npm run test:custom`**       | Run Custom Rules tests.                             |
+| **`npm run test:model`**        | Run Model Intelligence tests.                       |
+| **`npm run test:quick`**        | Run Quick Tests.                                    |
+| **`npm run test:monitor`**      | Run Regression Monitor tests.                       |
+| **`npm run test:response`**     | Run Response Audit tests.                           |
+| **`npm run test:conversation`** | Run Conversation Analysis tests.                    |
+| **`npm run test:selected`**     | Run test IDs from `test-plans/selected-tests.json`. |
+| **`npm run test:files`**        | Run files from `test-plans/selected-files.json`.    |
+| **`npm run report`**            | Open the Playwright HTML report.                    |
 
 ## 12. Common Run Commands
 
@@ -356,11 +356,7 @@ test-plans/selected-tests.json
 
 ```json
 {
-    "testIds": [
-        "BA_001",
-        "BA_003",
-        "RA_005"
-    ]
+    "testIds": ["BA_001", "BA_003", "RA_005"]
 }
 ```
 
@@ -387,10 +383,7 @@ test-plans/selected-files.json
 
 ```json
 {
-    "files": [
-        "tests/bulkAudit.spec.js",
-        "tests/responseAudit.spec.js"
-    ]
+    "files": ["tests/bulkAudit.spec.js", "tests/responseAudit.spec.js"]
 }
 ```
 
@@ -410,42 +403,42 @@ playwright.config.js
 
 **Important settings:**
 
-| Setting | Value |
-| --- | --- |
-| **Test folder** | `./tests` |
-| **Test timeout** | `300000` ms |
-| **Expect timeout** | `30000` ms |
+| Setting              | Value                                         |
+| -------------------- | --------------------------------------------- |
+| **Test folder**      | `./tests`                                     |
+| **Test timeout**     | `300000` ms                                   |
+| **Expect timeout**   | `30000` ms                                    |
 | **Default base URL** | `https://grounded-topaz.vercel.app/dashboard` |
-| **Default browser** | Chromium |
-| **Headless locally** | `true` only when `HEADLESS=true` |
-| **Headless in CI** | `true` when `CI=true` |
-| **Viewport** | `1440 x 900` |
-| **Screenshots** | Only on failure |
-| **Video** | Retained on failure |
-| **Trace** | On first retry |
-| **Retries locally** | `0` |
-| **Retries in CI** | `1` |
-| **Workers locally** | `1` |
-| **Workers in CI** | `2` |
+| **Default browser**  | Chromium                                      |
+| **Headless locally** | `true` only when `HEADLESS=true`              |
+| **Headless in CI**   | `true` when `CI=true`                         |
+| **Viewport**         | `1440 x 900`                                  |
+| **Screenshots**      | Only on failure                               |
+| **Video**            | Retained on failure                           |
+| **Trace**            | On first retry                                |
+| **Retries locally**  | `0`                                           |
+| **Retries in CI**    | `1`                                           |
+| **Workers locally**  | `1`                                           |
+| **Workers in CI**    | `2`                                           |
 
 **Reporters:**
 
-| Reporter | Output |
-| --- | --- |
-| **List** | Terminal output |
-| **HTML** | `playwright-report/` |
-| **JSON** | `results/playwright-results.json` |
-| **JUnit** | `results/junit-results.xml` |
+| Reporter  | Output                            |
+| --------- | --------------------------------- |
+| **List**  | Terminal output                   |
+| **HTML**  | `playwright-report/`              |
+| **JSON**  | `results/playwright-results.json` |
+| **JUnit** | `results/junit-results.xml`       |
 
 ## 16. Environment Variables
 
-| Variable | Required | Meaning |
-| --- | --- | --- |
-| **`EMAIL`** | **Yes for auth** | Login email. |
-| **`PASSWORD`** | **Yes for auth** | Login password. |
-| **`BASE_URL`** | No | Overrides default app URL. |
-| **`HEADLESS`** | No | Use `true` to run without visible browser. |
-| **`CI`** | No | Jenkins sets this to `true`. |
+| Variable       | Required         | Meaning                                    |
+| -------------- | ---------------- | ------------------------------------------ |
+| **`EMAIL`**    | **Yes for auth** | Login email.                               |
+| **`PASSWORD`** | **Yes for auth** | Login password.                            |
+| **`BASE_URL`** | No               | Overrides default app URL.                 |
+| **`HEADLESS`** | No               | Use `true` to run without visible browser. |
+| **`CI`**       | No               | Jenkins sets this to `true`.               |
 
 **Recommended local method:**
 
@@ -468,26 +461,26 @@ set HEADLESS=true && npx playwright test
 
 ## 17. Test Data Files
 
-| File | Used By |
-| --- | --- |
-| **`data/responseAudit.data.json`** | Response Audit tests |
-| **`data/bulkAudit.data.json`** | Bulk Audit tests |
+| File                                      | Used By                     |
+| ----------------------------------------- | --------------------------- |
+| **`data/responseAudit.data.json`**        | Response Audit tests        |
+| **`data/bulkAudit.data.json`**            | Bulk Audit tests            |
 | **`data/conversationAnalysis.data.json`** | Conversation Analysis tests |
-| **`data/customRules.data.json`** | Custom Rules tests |
-| **`data/modelIntelligence.data.json`** | Model Intelligence tests |
-| **`data/regressionMonitor.data.json`** | Regression Monitor tests |
-| **`data/quickTests.data.json`** | Quick Tests |
+| **`data/customRules.data.json`**          | Custom Rules tests          |
+| **`data/modelIntelligence.data.json`**    | Model Intelligence tests    |
+| **`data/regressionMonitor.data.json`**    | Regression Monitor tests    |
+| **`data/quickTests.data.json`**           | Quick Tests                 |
 
 **Supporting files:**
 
-| Path | Usage |
-| --- | --- |
-| **`data/bulk-audit-files/valid-bulk-audit.csv`** | Valid CSV upload test. |
-| **`data/bulk-audit-files/invalid-file.png`** | Invalid file upload test. |
-| **`data/bulk-audit-files/large-file.csv`** | Large file validation test. |
-| **`data/bulk-audit-files/more-than-50-rows.csv`** | Row limit validation data. |
-| **`data/reference-documents/KiwiQA Reference Document.txt`** | Reference document upload tests. |
-| **`data/reference-documents/large-reference-doc.txt`** | Large reference document validation. |
+| Path                                                         | Usage                                |
+| ------------------------------------------------------------ | ------------------------------------ |
+| **`data/bulk-audit-files/valid-bulk-audit.csv`**             | Valid CSV upload test.               |
+| **`data/bulk-audit-files/invalid-file.png`**                 | Invalid file upload test.            |
+| **`data/bulk-audit-files/large-file.csv`**                   | Large file validation test.          |
+| **`data/bulk-audit-files/more-than-50-rows.csv`**            | Row limit validation data.           |
+| **`data/reference-documents/KiwiQA Reference Document.txt`** | Reference document upload tests.     |
+| **`data/reference-documents/large-reference-doc.txt`**       | Large reference document validation. |
 
 ## 18. Evidence and Results
 
@@ -495,12 +488,12 @@ The framework saves **evidence after tests**.
 
 **Playwright outputs:**
 
-| Output | Location |
-| --- | --- |
-| **HTML report** | `playwright-report/` |
-| **JSON report** | `results/playwright-results.json` |
-| **JUnit report** | `results/junit-results.xml` |
-| **Screenshots, videos, traces** | `test-results/` |
+| Output                          | Location                          |
+| ------------------------------- | --------------------------------- |
+| **HTML report**                 | `playwright-report/`              |
+| **JSON report**                 | `results/playwright-results.json` |
+| **JUnit report**                | `results/junit-results.xml`       |
+| **Screenshots, videos, traces** | `test-results/`                   |
 
 **Custom UI result capture:**
 
@@ -625,16 +618,16 @@ npx playwright test tests/responseAudit.spec.js --grep "RA_009"
 
 Use **clear test case IDs**.
 
-| Prefix | Module |
-| --- | --- |
-| **`AUTH_SETUP`** | Authentication |
-| **`RA_`** | Response Audit |
-| **`BA_`** | Bulk Audit |
-| **`CA_`** | Conversation Analysis |
-| **`CR_`** | Custom Rules |
-| **`MI_`** | Model Intelligence |
-| **`RM_`** | Regression Monitor |
-| **`QT_`** | Quick Tests |
+| Prefix           | Module                |
+| ---------------- | --------------------- |
+| **`AUTH_SETUP`** | Authentication        |
+| **`RA_`**        | Response Audit        |
+| **`BA_`**        | Bulk Audit            |
+| **`CA_`**        | Conversation Analysis |
+| **`CR_`**        | Custom Rules          |
+| **`MI_`**        | Model Intelligence    |
+| **`RM_`**        | Regression Monitor    |
+| **`QT_`**        | Quick Tests           |
 
 **Good test name style:**
 
@@ -688,18 +681,18 @@ npx playwright test --browser=webkit
 
 ## 23. Common Problems and Fixes
 
-| Problem | Fix |
-| --- | --- |
-| **`auth/user.json` is missing** | Run **`npm run auth`** and complete OTP. |
-| **Login session expired** | Run **`npm run auth`** again. |
-| **Test says no tests found** | Check the ID with **`npm run test:list`**. |
+| Problem                               | Fix                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------- |
+| **`auth/user.json` is missing**       | Run **`npm run auth`** and complete OTP.                            |
+| **Login session expired**             | Run **`npm run auth`** again.                                       |
+| **Test says no tests found**          | Check the ID with **`npm run test:list`**.                          |
 | **`npm run test:quick` has no tests** | **`data/quickTests.data.json`** is currently empty. Add data first. |
-| **Browser opens during local run** | This is expected unless **`HEADLESS=true`**. |
-| **Browser does not open in Jenkins** | Jenkins uses **`HEADLESS=true`**. |
-| **App URL changed** | Set **`BASE_URL`** in **`.env`** or environment variables. |
-| **UI locator fails** | The app UI may have changed. Update the page object locator. |
-| **Report is not visible** | Run **`npm run report`** after tests finish. |
-| **Selected test does not run** | Make sure the ID exists and is spelled correctly. |
+| **Browser opens during local run**    | This is expected unless **`HEADLESS=true`**.                        |
+| **Browser does not open in Jenkins**  | Jenkins uses **`HEADLESS=true`**.                                   |
+| **App URL changed**                   | Set **`BASE_URL`** in **`.env`** or environment variables.          |
+| **UI locator fails**                  | The app UI may have changed. Update the page object locator.        |
+| **Report is not visible**             | Run **`npm run report`** after tests finish.                        |
+| **Selected test does not run**        | Make sure the ID exists and is spelled correctly.                   |
 
 ## 24. Best Practices
 

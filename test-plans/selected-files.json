@@ -1,6 +1,3 @@
 {
-    "files": [
-        "tests/bulkAudit.spec.js",
-        "tests/responseAudit.spec.js"
-    ]
+    "files": ["tests/bulkAudit.spec.js", "tests/responseAudit.spec.js"]
 }

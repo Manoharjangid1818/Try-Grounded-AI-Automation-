@@ -1,0 +1,7 @@
+node_modules/
+playwright-report/
+test-results/
+results/
+junit-results.xml/
+auth/
+package-lock.json

@@ -5,9 +5,11 @@ import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 import { saveJsonResult } from '../utils/resultWriter.js';
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
+/**
+ * Page object for Custom Rules setup and rule analytics verification.
+ */
 export class CustomRulesPage {
     constructor(page) {
-
         this.page = page;
 
         this.skipButton = page.getByRole('button', {
@@ -47,15 +49,15 @@ export class CustomRulesPage {
         });
     }
 
+    /**
+     * Opens the Custom Rules module from the dashboard.
+     *
+     * @returns {Promise<void>}
+     */
     async openCustomRulesPage() {
-
         await this.page.waitForLoadState('networkidle');
 
-        if (
-            await this.skipButton
-                .isVisible()
-                .catch(() => false)
-        ) {
+        if (await this.skipButton.isVisible().catch(() => false)) {
             await this.skipButton.click();
 
             console.log('Skip popup handled');
@@ -72,8 +74,14 @@ export class CustomRulesPage {
         console.log('Custom Rules page opened');
     }
 
+    /**
+     * Creates and saves a custom rule set from test data.
+     *
+     * @param {object} data - One test case object from data/customRules.data.json.
+     * @returns {Promise<void>}
+     */
     async createRule(data) {
-
+        // Step 1: fill the expected/incorrect/source fields that define the rule.
         await expect(this.expectedAnswerTextbox).toBeVisible({
             timeout: 30000
         });
@@ -90,6 +98,7 @@ export class CustomRulesPage {
 
         console.log('Source entered');
 
+        // Step 2: add the rule to the set, then save the set itself.
         await this.addRuleButton.click();
 
         console.log('Rule added');
@@ -103,8 +112,14 @@ export class CustomRulesPage {
         console.log('Rule set saved');
     }
 
+    /**
+     * Opens rule analytics, selects the saved rule card, and captures evidence.
+     *
+     * @param {object} data - Current Custom Rules test case.
+     * @param {import('@playwright/test').TestInfo} testInfo - Current test metadata.
+     * @returns {Promise<void>}
+     */
     async verifyRuleAnalytics(data, testInfo) {
-
         await expect(this.ruleAnalyticsButton).toBeVisible({
             timeout: 30000
         });
@@ -172,7 +187,10 @@ export class CustomRulesPage {
 
                 const prev = getPreviousEntry(data.testCaseId);
 
-                if (prev?.score != null && String(prev.score).trim() !== String(currentScore).trim()) {
+                if (
+                    prev?.score != null &&
+                    String(prev.score).trim() !== String(currentScore).trim()
+                ) {
                     const delta = `${String(currentScore).trim()} (prev ${String(prev.score).trim()})`;
                     const msg = `[${data.testCaseId}] GR score drift: prev=${prev.score}, current=${currentScore}, delta=${delta}`;
 
@@ -205,7 +223,5 @@ export class CustomRulesPage {
         } catch (e) {
             console.warn('Score history/drift tracking skipped:', e?.message || e);
         }
-
-        await this.page.waitForTimeout(3000);
     }
 }

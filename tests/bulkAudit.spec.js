@@ -14,16 +14,14 @@ test.use({
 
 registerResultCapture(test, {
     module: 'Bulk Audit',
-    getResultData: (testCaseId) =>
-        bulkAuditData.find((data) => data.testCaseId === testCaseId)
+    getResultData: (testCaseId) => bulkAuditData.find((data) => data.testCaseId === testCaseId)
 });
 
 test.describe('Bulk Audit Tests @bulk @regression', () => {
-
     for (const data of bulkAuditData) {
-
-        test(`${data.testCaseId} - ${data.testCaseName} @bulk @regression`, async ({ page }, testInfo) => {
-
+        test(`${data.testCaseId} - ${data.testCaseName} @bulk @regression`, async ({
+            page
+        }, testInfo) => {
             const bulkAuditPage = new BulkAuditPage(page);
 
             await page.goto('/dashboard');
@@ -33,97 +31,51 @@ test.describe('Bulk Audit Tests @bulk @regression', () => {
             if (data.scenarioType === 'happyFlow') {
                 await bulkAuditPage.createBulkAudit(data);
                 await bulkAuditPage.verifyBulkAuditCompleted(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'runButtonDisabledBeforeRows') {
+            } else if (data.scenarioType === 'runButtonDisabledBeforeRows') {
                 await bulkAuditPage.verifyRunButtonDisabledBeforeRowsLoaded(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'emptyAuditNameValidation') {
+            } else if (data.scenarioType === 'emptyAuditNameValidation') {
                 await bulkAuditPage.verifyEmptyAuditNameValidation(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'resetButton') {
+            } else if (data.scenarioType === 'resetButton') {
                 await bulkAuditPage.verifyResetButtonClearsForm(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'loadExample') {
+            } else if (data.scenarioType === 'loadExample') {
                 await bulkAuditPage.verifyLoadExampleWorks(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'referenceDocument') {
+            } else if (data.scenarioType === 'referenceDocument') {
                 await bulkAuditPage.verifyReferenceDocumentOption(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'csvUploadDefaultTab') {
+            } else if (data.scenarioType === 'csvUploadDefaultTab') {
                 await bulkAuditPage.verifyCsvUploadDefaultTab(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'liveAgentTab') {
+            } else if (data.scenarioType === 'liveAgentTab') {
                 await bulkAuditPage.verifyLiveAgentTab(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'testRunName') {
+            } else if (data.scenarioType === 'testRunName') {
                 await bulkAuditPage.verifyTestRunName(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'downloadSampleCsv') {
+            } else if (data.scenarioType === 'downloadSampleCsv') {
                 await bulkAuditPage.verifyDownloadSampleCsv(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'formatGuide') {
+            } else if (data.scenarioType === 'formatGuide') {
                 await bulkAuditPage.verifyFormatGuide(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'csvFileUpload') {
+            } else if (data.scenarioType === 'csvFileUpload') {
                 await bulkAuditPage.verifyCsvFileUpload(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'invalidFileUpload') {
+            } else if (data.scenarioType === 'invalidFileUpload') {
                 await bulkAuditPage.verifyInvalidFileUpload(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'fileSizeValidation') {
+            } else if (data.scenarioType === 'fileSizeValidation') {
                 await bulkAuditPage.verifyFileSizeValidation(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'rowLimitValidation') {
+            } else if (data.scenarioType === 'rowLimitValidation') {
                 await bulkAuditPage.verifyRowLimitValidation(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'expandJsonGroundTruth') {
+            } else if (data.scenarioType === 'expandJsonGroundTruth') {
                 await bulkAuditPage.verifyJsonGroundTruthExpands(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'validJsonGroundTruth') {
+            } else if (data.scenarioType === 'validJsonGroundTruth') {
                 await bulkAuditPage.verifyValidJsonGroundTruth(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'invalidJsonGroundTruth') {
+            } else if (data.scenarioType === 'invalidJsonGroundTruth') {
                 await bulkAuditPage.verifyInvalidJsonGroundTruth(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'activeLayersPanel') {
+            } else if (data.scenarioType === 'activeLayersPanel') {
                 await bulkAuditPage.verifyActiveLayersPanel(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'statusBeforeUpload') {
+            } else if (data.scenarioType === 'statusBeforeUpload') {
                 await bulkAuditPage.verifyStatusBeforeUpload(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'runsRemaining') {
+            } else if (data.scenarioType === 'runsRemaining') {
                 await bulkAuditPage.verifyRunsRemaining(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'referenceDocumentFileUpload') {
+            } else if (data.scenarioType === 'referenceDocumentFileUpload') {
                 await bulkAuditPage.verifyReferenceDocumentFileUpload(data, testInfo);
-            }
-
-            else if (data.scenarioType === 'referenceDocumentSizeValidation') {
+            } else if (data.scenarioType === 'referenceDocumentSizeValidation') {
                 await bulkAuditPage.verifyReferenceDocumentSizeValidation(data, testInfo);
-            }
-
-            else {
+            } else {
                 throw new Error(`Invalid scenarioType found: ${data.scenarioType}`);
             }
         });

@@ -5,9 +5,11 @@ import { captureFullPageScreenshot } from '../utils/screenshotHelper.js';
 import { saveJsonResult } from '../utils/resultWriter.js';
 import { appendToHistory, getPreviousEntry, extractScore } from '../utils/resultHistory.js';
 
+/**
+ * Page object for Model Intelligence comparison setup and result evidence.
+ */
 export class ModelIntelligencePage {
     constructor(page) {
-
         this.page = page;
 
         this.skipButton = page.getByRole('button', {
@@ -25,15 +27,15 @@ export class ModelIntelligencePage {
         });
     }
 
+    /**
+     * Opens the Model Intelligence module from the dashboard.
+     *
+     * @returns {Promise<void>}
+     */
     async openModelIntelligence() {
-
         await this.page.waitForLoadState('networkidle');
 
-        if (
-            await this.skipButton
-                .isVisible()
-                .catch(() => false)
-        ) {
+        if (await this.skipButton.isVisible().catch(() => false)) {
             await this.skipButton.click();
 
             console.log('Skip popup handled');
@@ -50,8 +52,14 @@ export class ModelIntelligencePage {
         console.log('Model Intelligence page opened');
     }
 
+    /**
+     * Selects the model and audit run used for comparison.
+     *
+     * @param {object} data - One test case object from data/modelIntelligence.data.json.
+     * @returns {Promise<void>}
+     */
     async configureComparison(data) {
-
+        // Step 1: choose the model option from the rendered card/list.
         const modelOption = this.page
             .locator('div')
             .filter({
@@ -67,6 +75,7 @@ export class ModelIntelligencePage {
 
         console.log(`${data.modelName} selected`);
 
+        // Step 2: choose the audit result from the comparison dropdown.
         await expect(this.auditDropdown).toBeVisible({
             timeout: 30000
         });
@@ -76,8 +85,14 @@ export class ModelIntelligencePage {
         console.log(`${data.auditName} selected`);
     }
 
+    /**
+     * Verifies comparison readiness state and captures evidence.
+     *
+     * @param {object} data - Current Model Intelligence test case.
+     * @param {import('@playwright/test').TestInfo} testInfo - Current test metadata.
+     * @returns {Promise<void>}
+     */
     async verifyRunComparisonButton(data, testInfo) {
-
         await expect(this.runComparisonButton).toBeVisible({
             timeout: 30000
         });
@@ -130,7 +145,10 @@ export class ModelIntelligencePage {
 
                 const prev = getPreviousEntry(data.testCaseId);
 
-                if (prev?.score != null && String(prev.score).trim() !== String(currentScore).trim()) {
+                if (
+                    prev?.score != null &&
+                    String(prev.score).trim() !== String(currentScore).trim()
+                ) {
                     const delta = `${String(currentScore).trim()} (prev ${String(prev.score).trim()})`;
                     const msg = `[${data.testCaseId}] GR score drift: prev=${prev.score}, current=${currentScore}, delta=${delta}`;
 
@@ -163,7 +181,5 @@ export class ModelIntelligencePage {
         } catch (e) {
             console.warn('Score history/drift tracking skipped:', e?.message || e);
         }
-
-        await this.page.waitForTimeout(3000);
     }
 }
