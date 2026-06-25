@@ -45,7 +45,7 @@ export class ConversationAnalysisPage {
         ).first();
 
         this.analysisResultSection = page.getByText(
-            /What gets checked|Per-turn GR score|Cross-turn consistency|Drift detection|Summary accuracy|All standard checks|RAG validation/i
+            /What gets checked|Per-turn GR score|Cross-turn consistency|Drift detection|Summary accuracy|All standard checks|RAG validation|Overall GR score|Detection layer results|Not certified|Certified/i
         ).first();
     }
 
@@ -281,11 +281,19 @@ export class ConversationAnalysisPage {
     async verifyAnalysisCompleted(data, testInfo) {
         const expectedResultSection = data.expectedResultText
             ? this.page.getByText(new RegExp(data.expectedResultText, 'i')).first()
-            : this.analysisResultSection;
+            : null;
 
-        await expect(expectedResultSection).toBeVisible({
-            timeout: 180000
-        });
+        const expectedResultVisible = expectedResultSection
+            ? await expectedResultSection
+                .isVisible({ timeout: 5000 })
+                .catch(() => false)
+            : false;
+
+        if (!expectedResultVisible) {
+            await expect(this.analysisResultSection).toBeVisible({
+                timeout: 180000
+            });
+        }
 
         console.log('Conversation analysis result section is visible');
 

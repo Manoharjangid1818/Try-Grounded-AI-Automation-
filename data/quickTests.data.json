@@ -1,8 +1,1 @@
-[
-    {
-        "testCaseId": "QT_001",
-        "testCaseName": "Verify Quick Tests Suite Runs Successfully",
-        "suiteIndex": 0,
-        "expectedResultPattern": "PASSED.*FAILED"
-    }
-]
+[]

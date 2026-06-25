@@ -22,10 +22,72 @@ npm run test:bulk
 npx playwright test tests/bulkAudit.spec.js
 ```
 
-- Run by ID:
+## Run individual test cases
+
+- Response Audit:
+```bash
+npx playwright test tests/responseAudit.spec.js --grep "RA_001"
+npx playwright test tests/responseAudit.spec.js --grep "RA_002"
+npx playwright test tests/responseAudit.spec.js --grep "RA_003"
+npx playwright test tests/responseAudit.spec.js --grep "RA_004"
+npx playwright test tests/responseAudit.spec.js --grep "RA_005"
+npx playwright test tests/responseAudit.spec.js --grep "RA_006"
+npx playwright test tests/responseAudit.spec.js --grep "RA_007"
+npx playwright test tests/responseAudit.spec.js --grep "RA_008"
+```
+
+- Bulk Audit:
 ```bash
 npx playwright test tests/bulkAudit.spec.js --grep "BA_001"
 npx playwright test tests/bulkAudit.spec.js --grep "BA_002"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_003"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_004"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_005"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_006"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_007"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_008"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_009"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_010"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_011"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_012"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_013"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_014"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_015"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_016"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_018"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_019"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_021"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_022"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_024"
+npx playwright test tests/bulkAudit.spec.js --grep "BA_025"
+```
+
+- Conversation Analysis:
+```bash
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_001"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_002"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_003"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_004"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_005"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_006"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_007"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_008"
+npx playwright test tests/conversationAnalysis.spec.js --grep "CA_009"
+```
+
+- Custom Rules:
+```bash
+npx playwright test tests/customRules.spec.js --grep "CR_001"
+```
+
+- Model Intelligence:
+```bash
+npx playwright test tests/modelIntelligence.spec.js --grep "MI_001"
+```
+
+- Regression Monitor:
+```bash
+npx playwright test tests/regressionMonitor.spec.js --grep "RM_001"
 ```
 
 - Run multiple IDs directly:

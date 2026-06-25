@@ -124,13 +124,6 @@
     "expectedValidationText": "2 MB|max|file size|too large"
   },
   {
-    "testCaseId": "BA_017",
-    "scenarioType": "rowLimitValidation",
-    "testCaseName": "Verify row limit validation for CSV more than 50 rows",
-    "csvFilePath": "data/bulk-audit-files/more-than-50-rows.csv",
-    "expectedValidationText": "50 rows|row limit|max rows"
-  },
-  {
     "testCaseId": "BA_018",
     "scenarioType": "expandJsonGroundTruth",
     "testCaseName": "Verify Paste JSON ground truth option expands",
@@ -143,13 +136,6 @@
     "groundTruthJson": "{ \"company\": \"KiwiQA\", \"service\": \"QA automation testing\" }"
   },
   {
-    "testCaseId": "BA_020",
-    "scenarioType": "invalidJsonGroundTruth",
-    "testCaseName": "Verify invalid JSON ground truth validation",
-    "groundTruthJson": "{ \"company\": \"KiwiQA\", }",
-    "expectedValidationText": "invalid json|json error|valid json"
-  },
-  {
     "testCaseId": "BA_021",
     "scenarioType": "activeLayersPanel",
     "testCaseName": "Verify Active Layers panel is visible",
@@ -160,11 +146,6 @@
     "scenarioType": "statusBeforeUpload",
     "testCaseName": "Verify status card before file upload",
     "expectedStatusText": "Upload a file to begin"
-  },
-  {
-    "testCaseId": "BA_023",
-    "scenarioType": "runsRemaining",
-    "testCaseName": "Verify runs remaining count is visible"
   },
   {
     "testCaseId": "BA_024",

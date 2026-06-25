@@ -69,29 +69,28 @@ export class QuickTestsPage {
 
         console.log('Waiting for suite completion');
 
-        const resultCard = this.page
-            .getByText(
-                new RegExp(data.expectedResultPattern, 'i')
-            )
-            .first();
-
-        await expect(resultCard).toBeVisible({
-            timeout: 300000
-        });
+        await expect.poll(
+            async () => this.page.locator('body').innerText(),
+            {
+                message: 'Quick Test Suite did not report completion.',
+                timeout: 300000
+            }
+        ).toMatch(/Complete\s+—\s+\d+\/\d+\s+(?:passed|failed)/i);
 
         console.log('Suite execution completed');
 
-        await resultCard.click();
+        const uiText = await this.page.locator('body').innerText();
 
-        console.log('Result opened successfully');
+        expect(
+            uiText,
+            `Quick Test Suite did not meet the expected result: ${data.expectedResultPattern}`
+        ).toMatch(new RegExp(data.expectedResultPattern, 'i'));
 
         const screenshotPath = await captureFullPageScreenshot(
             this.page,
             testInfo,
             `${data.testCaseId}-quick-tests-result`
         );
-
-        const uiText = await this.page.locator('body').innerText();
 
         const resultData = {
             testCaseId: data.testCaseId,

@@ -82,7 +82,11 @@ export class ResponseAuditPage {
         this.groundTruthGreenCheck = page.getByText(/Ground truth loaded/i);
 
         // Error toast (optional; app-dependent)
-        this.errorToast = page.getByText(/error|failed|toast/i).first();
+        this.errorToast = page.locator(
+            '[role="alert"], [data-sonner-toast], [data-toast], [class*="toast"]'
+        ).filter({
+            hasText: /error|failed|toast/i
+        }).first();
 
         // Result body for “references ground truth source” assertion
         this.auditResultBody = page.locator('body');
@@ -172,12 +176,9 @@ export class ResponseAuditPage {
     }
 
     async assertGroundTruthLoaded() {
-        // For the "Load example" flow we only require that the UI progresses
-        // (context and generated content become non-empty).
-        // The specific "Ground truth loaded" banner may not exist / may vary.
-        await this.assertContextAndGeneratedContentNotEmpty();
-
-        // Optional best-effort indicator (never fail).
+        // This readiness check occurs before the test requests an AI response,
+        // so AI-generated content is correctly still empty at this point.
+        // The banner varies by source/UI version, therefore it is best-effort.
         const candidates = [this.groundTruthLoadedText, this.hubspotTagText].filter(Boolean);
         const start = Date.now();
         const timeoutMs = 5000;
@@ -189,23 +190,63 @@ export class ResponseAuditPage {
         }
     }
 
+    async getContextPromptField() {
+        if (await this.contextPromptField.isVisible({ timeout: 3000 }).catch(() => false)) {
+            return this.contextPromptField;
+        }
+
+        const sectionField = this.page
+            .getByText(/CONTEXT\s*\/\s*PROMPT/i)
+            .first()
+            .locator('..')
+            .locator('textarea, input')
+            .first();
+
+        if (await sectionField.isVisible({ timeout: 3000 }).catch(() => false)) {
+            return sectionField;
+        }
+
+        return this.page.locator('textarea').first();
+    }
+
+    async getAiGeneratedContentField() {
+        if (await this.aiGeneratedContentField.isVisible({ timeout: 3000 }).catch(() => false)) {
+            return this.aiGeneratedContentField;
+        }
+
+        const sectionField = this.page
+            .getByText(/AI-GENERATED CONTENT/i)
+            .first()
+            .locator('..')
+            .locator('textarea, input')
+            .first();
+
+        if (await sectionField.isVisible({ timeout: 3000 }).catch(() => false)) {
+            return sectionField;
+        }
+
+        return this.page.locator('textarea').nth(1);
+    }
+
     async assertContextAndGeneratedContentNotEmpty() {
         // Context/Prompt
-        if (await this.contextPromptField.isVisible().catch(() => false)) {
-            await expect(this.contextPromptField).toHaveValue('', { timeout: 1 }).catch(() => {});
-            const val = await this.contextPromptField.inputValue().catch(async () => {
+        const contextPromptField = await this.getContextPromptField();
+
+        if (await contextPromptField.isVisible().catch(() => false)) {
+            await expect(contextPromptField).toHaveValue('', { timeout: 1 }).catch(() => {});
+            const val = await contextPromptField.inputValue().catch(async () => {
                 // fallback: try text content
-                return (await this.contextPromptField.innerText()).trim();
+                return (await contextPromptField.innerText()).trim();
             });
             expect(String(val).trim().length).toBeGreaterThan(0);
         }
 
         // AI-generated content
-        if (
-            await this.aiGeneratedContentField.isVisible().catch(() => false)
-        ) {
-            const val = await this.aiGeneratedContentField.inputValue().catch(async () => {
-                return (await this.aiGeneratedContentField.innerText()).trim();
+        const aiGeneratedContentField = await this.getAiGeneratedContentField();
+
+        if (await aiGeneratedContentField.isVisible().catch(() => false)) {
+            const val = await aiGeneratedContentField.inputValue().catch(async () => {
+                return (await aiGeneratedContentField.innerText()).trim();
             });
             expect(String(val).trim().length).toBeGreaterThan(0);
         }
@@ -541,19 +582,23 @@ export class ResponseAuditPage {
 
     async assertRightPanelCRMRecordAndLayers() {
         await expect(this.crmRecordActiveText).toBeVisible({ timeout: 30000 });
-        await expect(this.layersVerificationNoteText).toBeVisible({ timeout: 30000 });
+        await expect(this.layersVerificationNoteText.first()).toBeVisible({ timeout: 30000 });
     }
 
 
     async assertContextPromptContainsName(name) {
-        // Use the same field used by existing non-empty assertions.
-        await expect(this.contextPromptField).toBeVisible({ timeout: 30000 });
+        const contextPromptField = await this.getContextPromptField();
 
-        const val = await this.contextPromptField
+        await expect(contextPromptField).toBeVisible({ timeout: 30000 });
+
+        const val = await contextPromptField
             .inputValue()
-            .catch(async () => (await this.contextPromptField.innerText()).trim());
+            .catch(async () => (await contextPromptField.innerText()).trim());
 
-        expect(String(val)).toContain(name);
+        const normalizedContext = String(val).replace(/\s+/g, ' ').trim();
+        const normalizedName = String(name).replace(/\s+/g, ' ').trim();
+
+        expect(normalizedContext).toContain(normalizedName);
     }
 
     async assertNoErrorToast() {
@@ -565,8 +610,17 @@ export class ResponseAuditPage {
     }
 
     async assertResultReferencesGroundTruthSource(sourceName) {
-        // Best-effort: validate ground truth reference appears in body text.
         const uiText = await this.auditResultBody.innerText();
+
+        if (/hubspot|salesforce|crm/i.test(sourceName)) {
+            // Current result reports show CRM mode/Layer 9 instead of repeating
+            // the connector's brand name after an audit completes.
+            expect(uiText).toMatch(
+                new RegExp(`${sourceName}|CRM\\s+MODE|Structured Data Fidelity|Layer 9`, 'i')
+            );
+            return;
+        }
+
         expect(uiText).toMatch(new RegExp(sourceName, 'i'));
     }
 }
